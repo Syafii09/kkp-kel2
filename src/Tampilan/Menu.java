@@ -17,15 +17,23 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
-    panelContent.setLayout(new java.awt.BorderLayout());
+        
+        // Add action listeners here so NetBeans doesn't overwrite them
+        bsimpanan.addActionListener(this::bsimpananActionPerformed);
+        bangsuran.addActionListener(this::bangsuranActionPerformed);
+        blaporan.addActionListener(this::blaporanActionPerformed);
+        bpengaturan.addActionListener(this::bpengaturanActionPerformed);
+        blogout.addActionListener(this::blogoutActionPerformed);
 
-    DashboardPanel dashboard = new DashboardPanel();
+        panelContent.setLayout(new java.awt.BorderLayout());
 
-    panelContent.add(dashboard, java.awt.BorderLayout.CENTER);
+        DashboardPanel dashboard = new DashboardPanel();
 
-    panelContent.revalidate();
+        panelContent.add(dashboard, java.awt.BorderLayout.CENTER);
 
-    panelContent.repaint();
+        panelContent.revalidate();
+
+        panelContent.repaint();
     }
 
     /**
@@ -64,11 +72,9 @@ public class Menu extends javax.swing.JFrame {
 
         bsimpanan.setText("🏛️ Manajemen Simpanan");
         bsimpanan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        bsimpanan.addActionListener(this::bsimpananActionPerformed);
 
         bangsuran.setText("💰 Angsuran");
         bangsuran.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        bangsuran.addActionListener(this::bangsuranActionPerformed);
 
         btransaksi.setText("💲 Transaksi");
         btransaksi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -76,15 +82,12 @@ public class Menu extends javax.swing.JFrame {
 
         blaporan.setText("📊 Laporan");
         blaporan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        blaporan.addActionListener(this::blaporanActionPerformed);
 
         bpengaturan.setText("🛠️ Pengaturan");
         bpengaturan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        bpengaturan.addActionListener(this::bpengaturanActionPerformed);
 
         blogout.setText("⏻ Logout");
         blogout.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        blogout.addActionListener(this::blogoutActionPerformed);
 
         javax.swing.GroupLayout panelMenuLayout = new javax.swing.GroupLayout(panelMenu);
         panelMenu.setLayout(panelMenuLayout);
@@ -142,7 +145,7 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(218, 218, 218)
                 .addComponent(jLabel1)
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addContainerGap(232, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,7 +158,7 @@ public class Menu extends javax.swing.JFrame {
         panelContent.setLayout(panelContentLayout);
         panelContentLayout.setHorizontalGroup(
             panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 536, Short.MAX_VALUE)
         );
         panelContentLayout.setVerticalGroup(
             panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,8 +175,9 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(panelContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
