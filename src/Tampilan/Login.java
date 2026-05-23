@@ -17,6 +17,14 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        // Hapus teks default di password field
+        pfPassword.setText("");
+        // Wire tombol Clear
+        jButton2.addActionListener(e -> {
+            jTextField1.setText("");
+            pfPassword.setText("");
+            jTextField1.requestFocus();
+        });
     }
 
     /**
@@ -33,11 +41,11 @@ public class Login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        pfPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,6 +77,8 @@ public class Login extends javax.swing.JFrame {
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Clear");
 
+        pfPassword.setText("jPasswordField1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -87,7 +97,7 @@ public class Login extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jTextField2))
+                                        .addComponent(pfPassword))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addGap(18, 18, 18)
@@ -120,7 +130,7 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -141,7 +151,27 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String nama     = jTextField1.getText().trim();
+        String password = new String(pfPassword.getPassword()).trim();
+
+        // Credentials default (bisa diganti nanti dengan koneksi database)
+        String defaultNama     = "tes";
+        String defaultPassword = "123456";
+
+        if (nama.equals(defaultNama) && password.equals(defaultPassword)) {
+            // Login berhasil -> buka Menu dan tutup Login
+            new Menu().setVisible(true);
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Nama atau Password salah!\nGunakan:\n  Nama     : tes\n  Password : 123456",
+                "Login Gagal",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            pfPassword.setText("");
+            pfPassword.requestFocus();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -179,6 +209,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField pfPassword;
     // End of variables declaration//GEN-END:variables
 }
