@@ -64,14 +64,14 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButton1" linkSize="4" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton4" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton5" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton6" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton7" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton8" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton2" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton3" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="bdashboard" linkSize="4" min="-2" max="-2" attributes="0"/>
+                      <Component id="bangsuran" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="btransaksi" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="blaporan" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="bpengaturan" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="blogout" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="banggota" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="bsimpanan" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -81,28 +81,28 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                  <Component id="bdashboard" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                  <Component id="banggota" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bsimpanan" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                  <Component id="bangsuran" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton5" min="-2" max="-2" attributes="0"/>
+                  <Component id="btransaksi" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton6" min="-2" max="-2" attributes="0"/>
+                  <Component id="blaporan" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton7" min="-2" max="-2" attributes="0"/>
+                  <Component id="bpengaturan" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton8" min="-2" max="-2" attributes="0"/>
+                  <Component id="blogout" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="32" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="bdashboard">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83c\udfe0 Dashboard" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
@@ -111,46 +111,46 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bdashboardActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton2">
+        <Component class="javax.swing.JButton" name="banggota">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83d\udc65 Manajemen Anggota " containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton3">
+        <Component class="javax.swing.JButton" name="bsimpanan">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83c\udfdb&#xfe0f; Manajemen Simpanan" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
+        <Component class="javax.swing.JButton" name="bangsuran">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83d\udcb0 Angsuran" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton5">
+        <Component class="javax.swing.JButton" name="btransaksi">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83d\udcb2 Transaksi" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton6">
+        <Component class="javax.swing.JButton" name="blaporan">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83d\udcca Laporan" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton7">
+        <Component class="javax.swing.JButton" name="bpengaturan">
           <Properties>
             <Property name="text" type="java.lang.String" value="\ud83d\udee0&#xfe0f; Pengaturan" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton8">
+        <Component class="javax.swing.JButton" name="blogout">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x23fb; Logout"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
