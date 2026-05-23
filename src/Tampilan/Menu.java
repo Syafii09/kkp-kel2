@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Tampilan;
-
+import java.awt.CardLayout;
 /**
  *
  * @author BeniAkbar
@@ -17,6 +17,12 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
+    CardLayout card = new CardLayout();
+    panelContent.setLayout(card);
+
+    DashboardPanel dashboard = new DashboardPanel();
+
+    panelContent.add(dashboard, "dashboard");
     }
 
     /**
@@ -28,86 +34,87 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        panelMenu = new javax.swing.JPanel();
+        bdashboard = new javax.swing.JButton();
+        banggota = new javax.swing.JButton();
+        bsimpanan = new javax.swing.JButton();
+        bangsuran = new javax.swing.JButton();
+        btransaksi = new javax.swing.JButton();
+        blaporan = new javax.swing.JButton();
+        bpengaturan = new javax.swing.JButton();
+        blogout = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        panelContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setText("🏠 Dashboard");
-        jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButton1.setPreferredSize(new java.awt.Dimension(104, 23));
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        bdashboard.setText("🏠 Dashboard");
+        bdashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bdashboard.setPreferredSize(new java.awt.Dimension(104, 23));
+        bdashboard.addActionListener(this::bdashboardActionPerformed);
 
-        jButton2.setText("👥 Manajemen Anggota ");
-        jButton2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        banggota.setText("👥 Manajemen Anggota ");
+        banggota.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        jButton3.setText("🏛️ Manajemen Simpanan");
-        jButton3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bsimpanan.setText("🏛️ Manajemen Simpanan");
+        bsimpanan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        jButton4.setText("💰 Angsuran");
-        jButton4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bangsuran.setText("💰 Angsuran");
+        bangsuran.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        jButton5.setText("💲 Transaksi");
-        jButton5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btransaksi.setText("💲 Transaksi");
+        btransaksi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        jButton6.setText("📊 Laporan");
-        jButton6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        blaporan.setText("📊 Laporan");
+        blaporan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        jButton7.setText("🛠️ Pengaturan");
-        jButton7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bpengaturan.setText("🛠️ Pengaturan");
+        bpengaturan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        jButton8.setText("⏻ Logout");
-        jButton8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        blogout.setText("⏻ Logout");
+        blogout.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelMenuLayout = new javax.swing.GroupLayout(panelMenu);
+        panelMenu.setLayout(panelMenuLayout);
+        panelMenuLayout.setHorizontalGroup(
+            panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7)
-                    .addComponent(jButton8)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bdashboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bangsuran)
+                    .addComponent(btransaksi)
+                    .addComponent(blaporan)
+                    .addComponent(bpengaturan)
+                    .addComponent(blogout)
+                    .addComponent(banggota)
+                    .addComponent(bsimpanan))
                 .addContainerGap())
         );
 
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2, jButton3, jButton4, jButton5, jButton6, jButton7, jButton8});
+        panelMenuLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {banggota, bangsuran, bdashboard, blaporan, blogout, bpengaturan, bsimpanan, btransaksi});
 
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        panelMenuLayout.setVerticalGroup(
+            panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(bdashboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
+                .addComponent(banggota)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addComponent(bsimpanan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
+                .addComponent(bangsuran)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
+                .addComponent(btransaksi)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6)
+                .addComponent(blaporan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton7)
+                .addComponent(bpengaturan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton8)
+                .addComponent(blogout)
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
@@ -134,6 +141,17 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(0, 12, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout panelContentLayout = new javax.swing.GroupLayout(panelContent);
+        panelContent.setLayout(panelContentLayout);
+        panelContentLayout.setHorizontalGroup(
+            panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 540, Short.MAX_VALUE)
+        );
+        panelContentLayout.setVerticalGroup(
+            panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,8 +161,9 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -153,16 +172,20 @@ public class Menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void bdashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bdashboardActionPerformed
+    CardLayout cl = (CardLayout) panelContent.getLayout();
+    cl.show(panelContent, "dashboard");
+ // TODO add your handling code here:
+    }//GEN-LAST:event_bdashboardActionPerformed
 
     /**
      * @param args the command line arguments
@@ -190,16 +213,18 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
+    private javax.swing.JButton banggota;
+    private javax.swing.JButton bangsuran;
+    private javax.swing.JButton bdashboard;
+    private javax.swing.JButton blaporan;
+    private javax.swing.JButton blogout;
+    private javax.swing.JButton bpengaturan;
+    private javax.swing.JButton bsimpanan;
+    private javax.swing.JButton btransaksi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel panelContent;
+    private javax.swing.JPanel panelMenu;
     // End of variables declaration//GEN-END:variables
+
 }
