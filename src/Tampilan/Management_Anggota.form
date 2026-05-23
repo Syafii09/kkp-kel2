@@ -37,7 +37,7 @@
                       <Component id="btcetakanggota" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btExportanggota" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="25" max="32767" attributes="0"/>
                       <Component id="jLabel1" min="-2" pref="48" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tfSearch" min="-2" pref="187" max="-2" attributes="0"/>
@@ -198,13 +198,13 @@
                       <Component id="tfAlamatanggota" max="32767" attributes="0"/>
                       <Component id="tfNohpanggota" alignment="1" min="-2" pref="125" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jLabel11" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
                       <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jLabel10" alignment="0" pref="120" max="32767" attributes="0"/>
+                      <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
                       <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jLabel13" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel13" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -214,7 +214,7 @@
                       <Component id="tfJumlahsimpanananggota" alignment="0" max="32767" attributes="0"/>
                       <Component id="tfJumlahPinjamananggota" alignment="0" min="-2" pref="125" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
