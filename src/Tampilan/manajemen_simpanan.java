@@ -71,6 +71,7 @@ public class manajemen_simpanan extends javax.swing.JFrame {
         btSimpan.setBackground(new java.awt.Color(0, 0, 255));
         btSimpan.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         btSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        btSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/Icon/diskette.png"))); // NOI18N
         btSimpan.setText("Simpan");
         btSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,6 +82,7 @@ public class manajemen_simpanan extends javax.swing.JFrame {
         btReset.setBackground(new java.awt.Color(255, 51, 0));
         btReset.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         btReset.setForeground(new java.awt.Color(255, 255, 255));
+        btReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/Icon/undo.png"))); // NOI18N
         btReset.setText("Reset");
 
         cbjenis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Pilih--", "Simpanan Wajib", "Simpanan Pokok" }));
@@ -111,9 +113,9 @@ public class manajemen_simpanan extends javax.swing.JFrame {
                     .addComponent(tfKeterangan))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btSimpan)
-                    .addComponent(btReset))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btSimpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
