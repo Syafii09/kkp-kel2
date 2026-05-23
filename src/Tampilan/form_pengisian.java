@@ -28,21 +28,200 @@ public class form_pengisian extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgJenkelanggota = new javax.swing.ButtonGroup();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        calCalonanggota = new com.toedter.calendar.JDateChooser();
+        tfTempattglanggota = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        tfKotakabupaten = new javax.swing.JTextField();
+        rbLakianggota = new javax.swing.JRadioButton();
+        rbPerempuananggota = new javax.swing.JRadioButton();
+        tfNoanggotakoperasi = new javax.swing.JTextField();
+        tfNamacalonanggota = new javax.swing.JTextField();
+        tfNohpanggota = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        taAlamatanggota = new javax.swing.JTextArea();
+        tfPekerjaananggota = new javax.swing.JTextField();
+        calTgldaftaranggota = new com.toedter.calendar.JDateChooser();
+        btSimpancalonanggota = new javax.swing.JButton();
+        btResetcalonanggota = new javax.swing.JButton();
+        btExitcalonanggota = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("IDENTITAS CALON ANGGOTA KOPERASI");
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+
+        jLabel2.setText("No. Anggota");
+
+        jLabel3.setText("Tempat, Tgl Lahir");
+
+        jLabel4.setText("Pekerjaan");
+
+        jLabel5.setText("No.HP");
+
+        jLabel6.setText("Nama");
+
+        jLabel7.setText("Alamat");
+
+        jLabel8.setText("Tgl Daftar");
+
+        jLabel9.setText("Jenis Kelamin ");
+
+        jLabel10.setText("Kota/Kabupaten");
+
+        bgJenkelanggota.add(rbLakianggota);
+        rbLakianggota.setText("Laki-laki");
+
+        bgJenkelanggota.add(rbPerempuananggota);
+        rbPerempuananggota.setText("Perempuan");
+        rbPerempuananggota.addActionListener(this::rbPerempuananggotaActionPerformed);
+
+        taAlamatanggota.setColumns(20);
+        taAlamatanggota.setRows(5);
+        jScrollPane1.setViewportView(taAlamatanggota);
+
+        btSimpancalonanggota.setBackground(new java.awt.Color(0, 51, 204));
+        btSimpancalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btSimpancalonanggota.setForeground(new java.awt.Color(255, 255, 255));
+        btSimpancalonanggota.setText("SIMPAN");
+
+        btResetcalonanggota.setBackground(new java.awt.Color(255, 153, 0));
+        btResetcalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btResetcalonanggota.setForeground(new java.awt.Color(255, 255, 255));
+        btResetcalonanggota.setText("RESET");
+
+        btExitcalonanggota.setBackground(new java.awt.Color(255, 0, 51));
+        btExitcalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btExitcalonanggota.setForeground(new java.awt.Color(255, 255, 255));
+        btExitcalonanggota.setText("EXIT");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tfTempattglanggota)
+                                            .addComponent(rbLakianggota, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(calCalonanggota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(rbPerempuananggota, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(tfNoanggotakoperasi, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfKotakabupaten, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                            .addComponent(tfNamacalonanggota)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfNohpanggota, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfPekerjaananggota, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(calTgldaftaranggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btSimpancalonanggota)
+                                .addGap(18, 18, 18)
+                                .addComponent(btResetcalonanggota)
+                                .addGap(18, 18, 18)
+                                .addComponent(btExitcalonanggota)))))
+                .addGap(65, 65, 65))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(74, 74, 74))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel1)
+                .addGap(54, 54, 54)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(tfNoanggotakoperasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(tfNamacalonanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(tfTempattglanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(calCalonanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10)
+                                .addComponent(tfKotakabupaten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(rbLakianggota)
+                            .addComponent(rbPerempuananggota))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5))
+                    .addComponent(tfNohpanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(tfPekerjaananggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel8)
+                        .addComponent(calTgldaftaranggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btSimpancalonanggota)
+                        .addComponent(btResetcalonanggota)
+                        .addComponent(btExitcalonanggota)))
+                .addGap(116, 116, 116))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void rbPerempuananggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPerempuananggotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbPerempuananggotaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -70,5 +249,31 @@ public class form_pengisian extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgJenkelanggota;
+    private javax.swing.JButton btExitcalonanggota;
+    private javax.swing.JButton btResetcalonanggota;
+    private javax.swing.JButton btSimpancalonanggota;
+    private com.toedter.calendar.JDateChooser calCalonanggota;
+    private com.toedter.calendar.JDateChooser calTgldaftaranggota;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton rbLakianggota;
+    private javax.swing.JRadioButton rbPerempuananggota;
+    private javax.swing.JTextArea taAlamatanggota;
+    private javax.swing.JTextField tfKotakabupaten;
+    private javax.swing.JTextField tfNamacalonanggota;
+    private javax.swing.JTextField tfNoanggotakoperasi;
+    private javax.swing.JTextField tfNohpanggota;
+    private javax.swing.JTextField tfPekerjaananggota;
+    private javax.swing.JTextField tfTempattglanggota;
     // End of variables declaration//GEN-END:variables
 }
