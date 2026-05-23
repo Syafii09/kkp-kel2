@@ -292,11 +292,19 @@ public class Menu extends javax.swing.JFrame {
     }
 
     private void bpinjamanActionPerformed(java.awt.event.ActionEvent evt) {
-        panelContent.removeAll();
-        MANAJEMEN_PINJAMAN panel = new MANAJEMEN_PINJAMAN();
-        panelContent.add(panel, java.awt.BorderLayout.CENTER);
-        panelContent.revalidate();
-        panelContent.repaint();
+        try {
+            panelContent.removeAll();
+            MANAJEMEN_PINJAMAN panel = new MANAJEMEN_PINJAMAN();
+            panelContent.add(panel, java.awt.BorderLayout.CENTER);
+            panelContent.revalidate();
+            panelContent.repaint();
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memuat halaman: " + e.getMessage() + "\n\nTolong lakukan CLEAN AND BUILD (logo palu dan sapu) di NetBeans!");
+            e.printStackTrace();
+        } catch (Error err) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error sistem: " + err.getMessage() + "\n\nTolong lakukan CLEAN AND BUILD (logo palu dan sapu) di NetBeans!");
+            err.printStackTrace();
+        }
     }
 
     /**
