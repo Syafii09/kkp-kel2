@@ -19,19 +19,15 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         
         // Add action listeners here so NetBeans doesn't overwrite them
-        bsimpanan.addActionListener(this::bsimpananActionPerformed);
+        bsimpanan1.addActionListener(this::bsimpanan1ActionPerformed);
         bangsuran.addActionListener(this::bangsuranActionPerformed);
         blaporan.addActionListener(this::blaporanActionPerformed);
         bpengaturan.addActionListener(this::bpengaturanActionPerformed);
         blogout.addActionListener(this::blogoutActionPerformed);
 
-        bpinjaman = new javax.swing.JButton("💸 Manajemen Pinjaman");
-        bpinjaman.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        bpinjaman.addActionListener(this::bpinjamanActionPerformed);
-        
         panelMenu.setLayout(new javax.swing.BoxLayout(panelMenu, javax.swing.BoxLayout.Y_AXIS));
         panelMenu.removeAll();
-        java.awt.Component[] buttons = {bdashboard, banggota, bsimpanan, bpinjaman, bangsuran, btransaksi, blaporan, bpengaturan, blogout};
+        java.awt.Component[] buttons = {bdashboard, banggota, bsimpanan1, bsimpanan, bangsuran, btransaksi, blaporan, bpengaturan, blogout};
         for (java.awt.Component btn : buttons) {
             javax.swing.JButton b = (javax.swing.JButton) btn;
             b.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 30));
@@ -69,6 +65,7 @@ public class Menu extends javax.swing.JFrame {
         bdashboard = new javax.swing.JButton();
         banggota = new javax.swing.JButton();
         bsimpanan = new javax.swing.JButton();
+        bsimpanan1 = new javax.swing.JButton();
         bangsuran = new javax.swing.JButton();
         btransaksi = new javax.swing.JButton();
         blaporan = new javax.swing.JButton();
@@ -90,8 +87,12 @@ public class Menu extends javax.swing.JFrame {
         banggota.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         banggota.addActionListener(this::banggotaActionPerformed);
 
-        bsimpanan.setText("🏛️ Manajemen Simpanan");
+        bsimpanan.setText("🏛️ Manajemen Pinjaman");
         bsimpanan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bsimpanan.addActionListener(this::bsimpananActionPerformed);
+
+        bsimpanan1.setText("🏛️ Manajemen Simpanan");
+        bsimpanan1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         bangsuran.setText("💰 Angsuran");
         bangsuran.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -113,18 +114,19 @@ public class Menu extends javax.swing.JFrame {
         panelMenu.setLayout(panelMenuLayout);
         panelMenuLayout.setHorizontalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panelMenuLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bsimpanan)
+                    .addComponent(bsimpanan1)
                     .addComponent(bdashboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(banggota)
                     .addComponent(bangsuran)
                     .addComponent(btransaksi)
                     .addComponent(blaporan)
                     .addComponent(bpengaturan)
-                    .addComponent(blogout)
-                    .addComponent(banggota)
-                    .addComponent(bsimpanan))
-                .addContainerGap())
+                    .addComponent(blogout))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         panelMenuLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {banggota, bangsuran, bdashboard, blaporan, blogout, bpengaturan, bsimpanan, btransaksi});
@@ -137,6 +139,8 @@ public class Menu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(banggota)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bsimpanan1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bsimpanan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bangsuran)
@@ -148,7 +152,7 @@ public class Menu extends javax.swing.JFrame {
                 .addComponent(bpengaturan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(blogout)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jPanel1.setBackground(java.awt.Color.blue);
@@ -178,11 +182,11 @@ public class Menu extends javax.swing.JFrame {
         panelContent.setLayout(panelContentLayout);
         panelContentLayout.setHorizontalGroup(
             panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 536, Short.MAX_VALUE)
+            .addGap(0, 477, Short.MAX_VALUE)
         );
         panelContentLayout.setVerticalGroup(
             panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 306, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -194,8 +198,9 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
                         .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(panelContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -205,11 +210,11 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
@@ -254,7 +259,23 @@ public class Menu extends javax.swing.JFrame {
     panelContent.repaint();
     }//GEN-LAST:event_btransaksiActionPerformed
 
-    private void bsimpananActionPerformed(java.awt.event.ActionEvent evt) {
+    private void bsimpananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpananActionPerformed
+        try {
+            panelContent.removeAll();
+            MANAJEMEN_PINJAMAN panel = new MANAJEMEN_PINJAMAN();
+            panelContent.add(panel, java.awt.BorderLayout.CENTER);
+            panelContent.revalidate();
+            panelContent.repaint();
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memuat halaman: " + e.getMessage() + "\n\nTolong lakukan CLEAN AND BUILD (logo palu dan sapu) di NetBeans!");
+            e.printStackTrace();
+        } catch (Error err) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error sistem: " + err.getMessage() + "\n\nTolong lakukan CLEAN AND BUILD (logo palu dan sapu) di NetBeans!");
+            err.printStackTrace();
+        }
+    }//GEN-LAST:event_bsimpananActionPerformed
+
+    private void bsimpanan1ActionPerformed(java.awt.event.ActionEvent evt) {
         panelContent.removeAll();
         manajemen_simpanan panel = new manajemen_simpanan();
         panelContent.add(panel, java.awt.BorderLayout.CENTER);
@@ -291,22 +312,6 @@ public class Menu extends javax.swing.JFrame {
         new Login().setVisible(true);
     }
 
-    private void bpinjamanActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
-            panelContent.removeAll();
-            MANAJEMEN_PINJAMAN panel = new MANAJEMEN_PINJAMAN();
-            panelContent.add(panel, java.awt.BorderLayout.CENTER);
-            panelContent.revalidate();
-            panelContent.repaint();
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memuat halaman: " + e.getMessage() + "\n\nTolong lakukan CLEAN AND BUILD (logo palu dan sapu) di NetBeans!");
-            e.printStackTrace();
-        } catch (Error err) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error sistem: " + err.getMessage() + "\n\nTolong lakukan CLEAN AND BUILD (logo palu dan sapu) di NetBeans!");
-            err.printStackTrace();
-        }
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -340,12 +345,12 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton blogout;
     private javax.swing.JButton bpengaturan;
     private javax.swing.JButton bsimpanan;
+    private javax.swing.JButton bsimpanan1;
     private javax.swing.JButton btransaksi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelContent;
     private javax.swing.JPanel panelMenu;
-    private javax.swing.JButton bpinjaman;
     // End of variables declaration//GEN-END:variables
 
 }
