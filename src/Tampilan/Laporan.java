@@ -180,7 +180,7 @@ public class Laporan extends javax.swing.JFrame {
 
         jLabel5.setText("Jenis Simpanan");
 
-        CbSimpanan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        CbSimpanan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- pilih --" }));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Urutkan Berdasarkan");
