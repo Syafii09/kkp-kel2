@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Tampilan;
 
@@ -8,14 +8,12 @@ package Tampilan;
  *
  * @author Rangga
  */
-public class Management_Anggota extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Management_Anggota.class.getName());
+public class manajemen_anggotaa extends javax.swing.JPanel {
 
     /**
-     * Creates new form Management_Anggota
+     * Creates new form manajemen_anggotaa
      */
-    public Management_Anggota() {
+    public manajemen_anggotaa() {
         initComponents();
     }
 
@@ -28,11 +26,6 @@ public class Management_Anggota extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btTambahanggota = new javax.swing.JButton();
-        btEditanggota = new javax.swing.JButton();
-        btHapusanggota = new javax.swing.JButton();
-        btcetakanggota = new javax.swing.JButton();
-        btExportanggota = new javax.swing.JButton();
         tfSearch = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -59,27 +52,11 @@ public class Management_Anggota extends javax.swing.JFrame {
         tfJumlahsimpanananggota = new javax.swing.JTextField();
         tfTanggaldaftaranggota = new javax.swing.JTextField();
         tfStatusanggota = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btTambahanggota.setBackground(new java.awt.Color(0, 51, 204));
-        btTambahanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btTambahanggota.setForeground(new java.awt.Color(255, 255, 255));
-        btTambahanggota.setText("Tambah");
-        btTambahanggota.addActionListener(this::btTambahanggotaActionPerformed);
-
-        btEditanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btEditanggota.setText("Edit");
-
-        btHapusanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btHapusanggota.setText("Hapus");
-
-        btcetakanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btcetakanggota.setText("Cetak");
-
-        btExportanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btExportanggota.setText("Export");
+        btTambahanggota = new javax.swing.JButton();
+        btEditanggota = new javax.swing.JButton();
+        btHapusanggota = new javax.swing.JButton();
+        btcetakanggota = new javax.swing.JButton();
+        btExportanggota = new javax.swing.JButton();
 
         tfSearch.addActionListener(this::tfSearchActionPerformed);
 
@@ -211,57 +188,71 @@ public class Management_Anggota extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        btTambahanggota.setBackground(new java.awt.Color(0, 51, 204));
+        btTambahanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btTambahanggota.setForeground(new java.awt.Color(255, 255, 255));
+        btTambahanggota.setText("Tambah");
+        btTambahanggota.addActionListener(this::btTambahanggotaActionPerformed);
+
+        btEditanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btEditanggota.setText("Edit");
+
+        btHapusanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btHapusanggota.setText("Hapus");
+
+        btcetakanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btcetakanggota.setText("Cetak");
+
+        btExportanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btExportanggota.setText("Export");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(btTambahanggota)
-                        .addGap(18, 18, 18)
-                        .addComponent(btEditanggota)
-                        .addGap(18, 18, 18)
-                        .addComponent(btHapusanggota)
-                        .addGap(18, 18, 18)
-                        .addComponent(btcetakanggota)
-                        .addGap(18, 18, 18)
-                        .addComponent(btExportanggota)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 695, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(btTambahanggota)
+                            .addGap(18, 18, 18)
+                            .addComponent(btEditanggota)
+                            .addGap(18, 18, 18)
+                            .addComponent(btHapusanggota)
+                            .addGap(18, 18, 18)
+                            .addComponent(btcetakanggota)
+                            .addGap(18, 18, 18)
+                            .addComponent(btExportanggota)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btTambahanggota)
-                    .addComponent(btEditanggota)
-                    .addComponent(btHapusanggota)
-                    .addComponent(btcetakanggota)
-                    .addComponent(btExportanggota)
-                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(132, 132, 132)
-                        .addComponent(jLabel8)))
-                .addGap(32, 32, 32)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 591, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btTambahanggota)
+                        .addComponent(btEditanggota)
+                        .addComponent(btHapusanggota)
+                        .addComponent(btcetakanggota)
+                        .addComponent(btExportanggota)
+                        .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGap(32, 32, 32)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(32, 32, 32)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void tfSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSearchActionPerformed
@@ -272,30 +263,6 @@ public class Management_Anggota extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btTambahanggotaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Management_Anggota().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btEditanggota;
@@ -314,7 +281,6 @@ public class Management_Anggota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

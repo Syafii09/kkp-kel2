@@ -119,6 +119,9 @@
             <Property name="text" type="java.lang.String" value="\ud83d\udc65 Manajemen Anggota " containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="banggotaActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="bsimpanan">
           <Properties>
@@ -137,6 +140,9 @@
             <Property name="text" type="java.lang.String" value="\ud83d\udcb2 Transaksi" containsInvalidXMLChars="true"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btransaksiActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="blaporan">
           <Properties>

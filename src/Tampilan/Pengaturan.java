@@ -8,7 +8,7 @@ package Tampilan;
  *
  * @author Rangga
  */
-public class Pengaturan extends javax.swing.JFrame {
+public class Pengaturan extends javax.swing.JPanel {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Pengaturan.class.getName());
 
@@ -64,7 +64,7 @@ public class Pengaturan extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel8.setText("Pengaturan");
@@ -354,8 +354,8 @@ public class Pengaturan extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Restore & Backup", jPanel1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -377,7 +377,7 @@ public class Pengaturan extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
+        // pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

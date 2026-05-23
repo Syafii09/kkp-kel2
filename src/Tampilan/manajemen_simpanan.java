@@ -8,7 +8,7 @@ package Tampilan;
  *
  * @author hp
  */
-public class manajemen_simpanan extends javax.swing.JFrame {
+public class manajemen_simpanan extends javax.swing.JPanel {
 
     /**
      * Creates new form manajemen_simpanan
@@ -48,7 +48,7 @@ public class manajemen_simpanan extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("INPUT SIMPANAN");
@@ -170,8 +170,8 @@ public class manajemen_simpanan extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Total Saldo Simpanan :");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -219,7 +219,7 @@ public class manajemen_simpanan extends javax.swing.JFrame {
                 .addContainerGap(74, Short.MAX_VALUE))
         );
 
-        pack();
+        // pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSimpanActionPerformed

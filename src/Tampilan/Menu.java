@@ -17,12 +17,15 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
-    CardLayout card = new CardLayout();
-    panelContent.setLayout(card);
+    panelContent.setLayout(new java.awt.BorderLayout());
 
     DashboardPanel dashboard = new DashboardPanel();
 
-    panelContent.add(dashboard, "dashboard");
+    panelContent.add(dashboard, java.awt.BorderLayout.CENTER);
+
+    panelContent.revalidate();
+
+    panelContent.repaint();
     }
 
     /**
@@ -57,24 +60,31 @@ public class Menu extends javax.swing.JFrame {
 
         banggota.setText("👥 Manajemen Anggota ");
         banggota.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        banggota.addActionListener(this::banggotaActionPerformed);
 
         bsimpanan.setText("🏛️ Manajemen Simpanan");
         bsimpanan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bsimpanan.addActionListener(this::bsimpananActionPerformed);
 
         bangsuran.setText("💰 Angsuran");
         bangsuran.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bangsuran.addActionListener(this::bangsuranActionPerformed);
 
         btransaksi.setText("💲 Transaksi");
         btransaksi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btransaksi.addActionListener(this::btransaksiActionPerformed);
 
         blaporan.setText("📊 Laporan");
         blaporan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        blaporan.addActionListener(this::blaporanActionPerformed);
 
         bpengaturan.setText("🛠️ Pengaturan");
         bpengaturan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bpengaturan.addActionListener(this::bpengaturanActionPerformed);
 
         blogout.setText("⏻ Logout");
         blogout.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        blogout.addActionListener(this::blogoutActionPerformed);
 
         javax.swing.GroupLayout panelMenuLayout = new javax.swing.GroupLayout(panelMenu);
         panelMenu.setLayout(panelMenuLayout);
@@ -182,10 +192,80 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bdashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bdashboardActionPerformed
-    CardLayout cl = (CardLayout) panelContent.getLayout();
-    cl.show(panelContent, "dashboard");
+    panelContent.removeAll();
+
+    DashboardPanel dashboard = new DashboardPanel();
+
+    panelContent.add(dashboard, java.awt.BorderLayout.CENTER);
+
+    panelContent.revalidate();
+
+    panelContent.repaint();
  // TODO add your handling code here:
     }//GEN-LAST:event_bdashboardActionPerformed
+
+    private void banggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_banggotaActionPerformed
+        // TODO add your handling code here:
+        panelContent.removeAll();
+
+    manajemen_anggotaa anggota = new manajemen_anggotaa();
+
+    panelContent.add(anggota, java.awt.BorderLayout.CENTER);
+
+    panelContent.revalidate();
+
+    panelContent.repaint();
+    }//GEN-LAST:event_banggotaActionPerformed
+
+    private void btransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btransaksiActionPerformed
+
+   panelContent.removeAll();
+
+    tampilan_baru panel = new tampilan_baru();
+
+    panelContent.add(panel, java.awt.BorderLayout.CENTER);
+
+    panelContent.revalidate();
+
+    panelContent.repaint();
+    }//GEN-LAST:event_btransaksiActionPerformed
+
+    private void bsimpananActionPerformed(java.awt.event.ActionEvent evt) {
+        panelContent.removeAll();
+        manajemen_simpanan panel = new manajemen_simpanan();
+        panelContent.add(panel, java.awt.BorderLayout.CENTER);
+        panelContent.revalidate();
+        panelContent.repaint();
+    }
+
+    private void bangsuranActionPerformed(java.awt.event.ActionEvent evt) {
+        panelContent.removeAll();
+        Angsuran panel = new Angsuran();
+        panelContent.add(panel, java.awt.BorderLayout.CENTER);
+        panelContent.revalidate();
+        panelContent.repaint();
+    }
+
+    private void blaporanActionPerformed(java.awt.event.ActionEvent evt) {
+        panelContent.removeAll();
+        Laporan panel = new Laporan();
+        panelContent.add(panel, java.awt.BorderLayout.CENTER);
+        panelContent.revalidate();
+        panelContent.repaint();
+    }
+
+    private void bpengaturanActionPerformed(java.awt.event.ActionEvent evt) {
+        panelContent.removeAll();
+        Pengaturan panel = new Pengaturan();
+        panelContent.add(panel, java.awt.BorderLayout.CENTER);
+        panelContent.revalidate();
+        panelContent.repaint();
+    }
+
+    private void blogoutActionPerformed(java.awt.event.ActionEvent evt) {
+        this.dispose();
+        new Login().setVisible(true);
+    }
 
     /**
      * @param args the command line arguments

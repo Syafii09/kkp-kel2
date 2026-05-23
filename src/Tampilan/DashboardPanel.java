@@ -15,6 +15,7 @@ public class DashboardPanel extends javax.swing.JPanel {
      */
     public DashboardPanel() {
         initComponents();
+        
     }
 
     /**

@@ -8,7 +8,7 @@ package Tampilan;
  *
  * @author sabil
  */
-public class Laporan extends javax.swing.JFrame {
+public class Laporan extends javax.swing.JPanel {
 
     /**
      * Creates new form Laporan
@@ -52,7 +52,7 @@ public class Laporan extends javax.swing.JFrame {
         BtExport = new javax.swing.JButton();
         PreviewPanel = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -279,8 +279,8 @@ public class Laporan extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -303,7 +303,7 @@ public class Laporan extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pack();
+        // pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtLpranggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtLpranggotaActionPerformed

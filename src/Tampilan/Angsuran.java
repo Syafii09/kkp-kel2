@@ -8,7 +8,7 @@ package Tampilan;
  *
  * @author feryo
  */
-public class Angsuran extends javax.swing.JFrame {
+public class Angsuran extends javax.swing.JPanel {
 
     /**
      * Creates new form Angsuran
@@ -48,7 +48,7 @@ public class Angsuran extends javax.swing.JFrame {
         tabelangsuran = new javax.swing.JTable();
         jTextField5 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("INPUT ANGSURAN");
@@ -220,8 +220,8 @@ public class Angsuran extends javax.swing.JFrame {
                 .addGap(26, 26, 26))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -241,7 +241,7 @@ public class Angsuran extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
+        // pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void tnamaangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnamaangActionPerformed
