@@ -89,6 +89,7 @@ public class Angsuran extends javax.swing.JPanel {
 
         btnsimpanang.setBackground(new java.awt.Color(51, 153, 255));
         btnsimpanang.setForeground(new java.awt.Color(255, 255, 255));
+        btnsimpanang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/Icon/diskette.png"))); // NOI18N
         btnsimpanang.setText("Simpan");
         btnsimpanang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,6 +99,7 @@ public class Angsuran extends javax.swing.JPanel {
 
         btnresetang.setBackground(new java.awt.Color(255, 0, 51));
         btnresetang.setForeground(new java.awt.Color(255, 255, 255));
+        btnresetang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/Icon/undowhite.png"))); // NOI18N
         btnresetang.setText("Reset");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
