@@ -25,7 +25,27 @@ public class Menu extends javax.swing.JFrame {
         bpengaturan.addActionListener(this::bpengaturanActionPerformed);
         blogout.addActionListener(this::blogoutActionPerformed);
 
+        bpinjaman = new javax.swing.JButton("💸 Manajemen Pinjaman");
+        bpinjaman.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bpinjaman.addActionListener(this::bpinjamanActionPerformed);
+        
+        panelMenu.setLayout(new javax.swing.BoxLayout(panelMenu, javax.swing.BoxLayout.Y_AXIS));
+        panelMenu.removeAll();
+        java.awt.Component[] buttons = {bdashboard, banggota, bsimpanan, bpinjaman, bangsuran, btransaksi, blaporan, bpengaturan, blogout};
+        for (java.awt.Component btn : buttons) {
+            javax.swing.JButton b = (javax.swing.JButton) btn;
+            b.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 30));
+            panelMenu.add(javax.swing.Box.createVerticalStrut(10));
+            panelMenu.add(b);
+        }
+
+        // Override the NetBeans layout entirely for the main JFrame to fix the gap issue!
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
+        getContentPane().add(panelMenu, java.awt.BorderLayout.WEST);
+        
         panelContent.setLayout(new java.awt.BorderLayout());
+        getContentPane().add(panelContent, java.awt.BorderLayout.CENTER);
 
         DashboardPanel dashboard = new DashboardPanel();
 
@@ -175,7 +195,7 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -271,6 +291,14 @@ public class Menu extends javax.swing.JFrame {
         new Login().setVisible(true);
     }
 
+    private void bpinjamanActionPerformed(java.awt.event.ActionEvent evt) {
+        panelContent.removeAll();
+        MANAJEMEN_PINJAMAN panel = new MANAJEMEN_PINJAMAN();
+        panelContent.add(panel, java.awt.BorderLayout.CENTER);
+        panelContent.revalidate();
+        panelContent.repaint();
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -309,6 +337,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelContent;
     private javax.swing.JPanel panelMenu;
+    private javax.swing.JButton bpinjaman;
     // End of variables declaration//GEN-END:variables
 
 }

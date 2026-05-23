@@ -16,6 +16,80 @@ public class DashboardPanel extends javax.swing.JPanel {
     public DashboardPanel() {
         initComponents();
         
+        panelGrafik.setPreferredSize(new java.awt.Dimension(450, 300));
+        panelGrafik.setMinimumSize(new java.awt.Dimension(450, 300));
+        panelGrafik.setLayout(new java.awt.BorderLayout());
+        panelGrafik.removeAll();
+        panelGrafik.add(new CustomBarChart(), java.awt.BorderLayout.CENTER);
+        panelGrafik.revalidate();
+        panelGrafik.repaint();
+    }
+
+    // Komponen grafik buatan sendiri agar tidak perlu repot install JFreeChart
+    class CustomBarChart extends javax.swing.JPanel {
+        private String[] labels = {"Jan", "Feb", "Mar", "Apr", "Mei", "Jun"};
+        private double[] values = {45, 65, 75, 95, 120, 150}; // Dalam juta
+        private double maxValue = 200;
+        
+        public CustomBarChart() {
+            setBackground(java.awt.Color.WHITE);
+        }
+
+        @Override
+        public java.awt.Dimension getPreferredSize() {
+            // Memberikan ukuran default agar grafik tidak gepeng
+            return new java.awt.Dimension(450, 300);
+        }
+
+        @Override
+        protected void paintComponent(java.awt.Graphics g) {
+            super.paintComponent(g);
+            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            int width = getWidth();
+            int height = getHeight();
+            
+            int padding = 40;
+            int labelPadding = 20;
+            
+            // Draw title
+            g2d.setColor(java.awt.Color.BLACK);
+            g2d.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+            g2d.drawString("Grafik Simpanan (6 Bulan Terakhir)", padding, padding / 2 + 10);
+            
+            // Draw Y axis lines and labels
+            g2d.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+            g2d.setColor(new java.awt.Color(220, 220, 220)); // Light Gray
+            for (int i = 0; i <= 4; i++) {
+                int y0 = height - padding - labelPadding - (i * (height - padding * 2 - labelPadding) / 4);
+                g2d.drawLine(padding, y0, width - padding, y0);
+                g2d.setColor(java.awt.Color.BLACK);
+                String yLabel = (i * 50) + (i == 0 ? "" : "M");
+                java.awt.FontMetrics metrics = g2d.getFontMetrics();
+                int labelWidth = metrics.stringWidth(yLabel);
+                g2d.drawString(yLabel, padding - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
+                g2d.setColor(new java.awt.Color(220, 220, 220));
+            }
+            
+            // Draw bars
+            int barWidth = (width - padding * 2) / labels.length / 2;
+            for (int i = 0; i < labels.length; i++) {
+                int x = padding + (i * (width - padding * 2) / labels.length) + barWidth / 2;
+                int barHeight = (int) ((values[i] / maxValue) * (height - padding * 2 - labelPadding));
+                int y = height - padding - labelPadding - barHeight;
+                
+                // Set color to blue just like the example
+                g2d.setColor(new java.awt.Color(20, 100, 200));
+                g2d.fillRect(x, y, barWidth, barHeight);
+                
+                // Draw X labels
+                g2d.setColor(java.awt.Color.BLACK);
+                java.awt.FontMetrics metrics = g2d.getFontMetrics();
+                int labelWidth = metrics.stringWidth(labels[i]);
+                g2d.drawString(labels[i], x + (barWidth - labelWidth) / 2, height - padding / 2);
+            }
+        }
     }
 
     /**
@@ -143,7 +217,7 @@ public class DashboardPanel extends javax.swing.JPanel {
         panelGrafik.setLayout(panelGrafikLayout);
         panelGrafikLayout.setHorizontalGroup(
             panelGrafikLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         panelGrafikLayout.setVerticalGroup(
             panelGrafikLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,18 +229,17 @@ public class DashboardPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(panelGrafik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelGrafik, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
