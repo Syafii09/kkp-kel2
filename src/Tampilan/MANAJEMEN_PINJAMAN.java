@@ -60,8 +60,6 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-
-
         jLabel1.setText("No. Anggota");
 
         jLabel2.setText("Nama");
@@ -121,7 +119,7 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -180,8 +178,7 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
                             .addComponent(tfBungaPinjaman)
                             .addComponent(tfStatusPinjaman))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,8 +218,6 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-
-
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSimpanPinjamanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanPinjamanActionPerformed
