@@ -4,6 +4,13 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Rangga
@@ -151,23 +158,60 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nama     = jTextField1.getText().trim();
+        String akun = jTextField1.getText().trim();
         String password = new String(pfPassword.getPassword()).trim();
+        String hakAkses = jComboBox1.getSelectedItem().toString();
 
-        // Credentials default (bisa diganti nanti dengan koneksi database)
-        String defaultNama     = "tes";
-        String defaultPassword = "123456";
+        if (akun.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Email/nama dan password wajib diisi.",
+                    "Login Gagal",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
-        if (nama.equals(defaultNama) && password.equals(defaultPassword)) {
-            // Login berhasil -> buka Menu dan tutup Login
-            new Menu().setVisible(true);
-            this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Nama atau Password salah!\nGunakan:\n  Nama     : tes\n  Password : 123456",
-                "Login Gagal",
-                javax.swing.JOptionPane.ERROR_MESSAGE
+        String sql = """
+                SELECT u.id_user, u.nama, g.nama_group
+                FROM users u
+                JOIN groups g ON g.id_group = u.id_group
+                WHERE (u.email = ? OR u.nama = ?)
+                  AND u.password_hash = SHA2(?, 256)
+                  AND g.nama_group = ?
+                  AND u.status = 'Aktif'
+                LIMIT 1
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, akun);
+            statement.setString(2, akun);
+            statement.setString(3, password);
+            statement.setString(4, hakAkses);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    new Menu().setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Email/nama, password, atau hak akses salah.",
+                            "Login Gagal",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    pfPassword.setText("");
+                    pfPassword.requestFocus();
+                }
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Tidak bisa terhubung ke database.\n" + ex.getMessage(),
+                    "Koneksi Gagal",
+                    JOptionPane.ERROR_MESSAGE
             );
             pfPassword.setText("");
             pfPassword.requestFocus();

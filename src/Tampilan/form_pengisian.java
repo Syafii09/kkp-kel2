@@ -4,6 +4,13 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Date;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Rangga
@@ -11,12 +18,235 @@ package Tampilan;
 public class form_pengisian extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(form_pengisian.class.getName());
+    private boolean modeEdit = false;
+    private String noAnggotaLama = "";
+    private Runnable onDataSaved;
 
     /**
      * Creates new form form_pengisian
      */
     public form_pengisian() {
         initComponents();
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        btSimpancalonanggota.addActionListener(e -> simpanAnggota());
+        btExitcalonanggota.addActionListener(e -> dispose());
+        btResetcalonanggota.addActionListener(e -> resetForm());
+    }
+
+    public void setModeTambah() {
+        modeEdit = false;
+        noAnggotaLama = "";
+        setTitle("Tambah Anggota");
+        jLabel1.setText("IDENTITAS CALON ANGGOTA KOPERASI");
+        btSimpancalonanggota.setText("SIMPAN");
+    }
+
+    public void setModeEdit() {
+        modeEdit = true;
+        setTitle("Edit Anggota");
+        jLabel1.setText("EDIT IDENTITAS ANGGOTA KOPERASI");
+        btSimpancalonanggota.setText("UPDATE");
+    }
+
+    public void isiDataAnggota(String noAnggota, String nama, String tempatTglLahir,
+            String alamat, String noHp, String pekerjaan, Date tanggalDaftar) {
+        tfNoanggotakoperasi.setText(noAnggota);
+        tfNamacalonanggota.setText(nama);
+        tfTempattglanggota.setText(tempatTglLahir);
+        taAlamatanggota.setText(alamat);
+        tfNohpanggota.setText(noHp);
+        tfPekerjaananggota.setText(pekerjaan);
+        calTgldaftaranggota.setDate(tanggalDaftar);
+        noAnggotaLama = noAnggota;
+    }
+
+    public void isiDataAnggota(String noAnggota, String nama, String tempatLahir,
+            Date tanggalLahir, String jenisKelamin, String alamat,
+            String kotaKabupaten, String noHp, String pekerjaan, Date tanggalDaftar) {
+        tfNoanggotakoperasi.setText(noAnggota);
+        tfNamacalonanggota.setText(nama);
+        tfTempattglanggota.setText(tempatLahir);
+        calCalonanggota.setDate(tanggalLahir);
+        pilihJenisKelamin(jenisKelamin);
+        taAlamatanggota.setText(alamat);
+        tfKotakabupaten.setText(kotaKabupaten);
+        tfNohpanggota.setText(noHp);
+        tfPekerjaananggota.setText(pekerjaan);
+        calTgldaftaranggota.setDate(tanggalDaftar);
+        noAnggotaLama = noAnggota;
+    }
+
+    public void setOnDataSaved(Runnable onDataSaved) {
+        this.onDataSaved = onDataSaved;
+    }
+
+    private void simpanAnggota() {
+        String noAnggota = tfNoanggotakoperasi.getText().trim();
+        String nama = tfNamacalonanggota.getText().trim();
+
+        if (noAnggota.isEmpty() || nama.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No. Anggota dan Nama wajib diisi.",
+                    "Validasi",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        if (calTgldaftaranggota.getDate() == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Tanggal daftar wajib diisi.",
+                    "Validasi",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        if (modeEdit) {
+            updateAnggota();
+        } else {
+            tambahAnggota();
+        }
+    }
+
+    private void tambahAnggota() {
+        String sql = """
+                INSERT INTO anggota (
+                  no_anggota, nama, tempat_lahir, tanggal_lahir, jenis_kelamin,
+                  alamat, kota_kabupaten, no_hp, pekerjaan, tanggal_daftar, status
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Aktif')
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            isiParameterAnggota(statement);
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Data anggota berhasil disimpan.");
+            refreshDataInduk();
+            dispose();
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal menyimpan data anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void updateAnggota() {
+        String sql = """
+                UPDATE anggota
+                SET no_anggota = ?,
+                    nama = ?,
+                    tempat_lahir = ?,
+                    tanggal_lahir = ?,
+                    jenis_kelamin = ?,
+                    alamat = ?,
+                    kota_kabupaten = ?,
+                    no_hp = ?,
+                    pekerjaan = ?,
+                    tanggal_daftar = ?
+                WHERE no_anggota = ?
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            isiParameterAnggota(statement);
+            statement.setString(11, noAnggotaLama);
+
+            int jumlahUpdate = statement.executeUpdate();
+            if (jumlahUpdate == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Data anggota tidak ditemukan.",
+                        "Update Gagal",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Data anggota berhasil diperbarui.");
+            refreshDataInduk();
+            dispose();
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memperbarui data anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void isiParameterAnggota(PreparedStatement statement) throws SQLException {
+        statement.setString(1, tfNoanggotakoperasi.getText().trim());
+        statement.setString(2, tfNamacalonanggota.getText().trim());
+        statement.setString(3, tfTempattglanggota.getText().trim());
+        setTanggal(statement, 4, calCalonanggota.getDate());
+        statement.setString(5, getJenisKelamin());
+        statement.setString(6, taAlamatanggota.getText().trim());
+        statement.setString(7, tfKotakabupaten.getText().trim());
+        statement.setString(8, tfNohpanggota.getText().trim());
+        statement.setString(9, tfPekerjaananggota.getText().trim());
+        setTanggal(statement, 10, calTgldaftaranggota.getDate());
+    }
+
+    private void setTanggal(PreparedStatement statement, int index, Date date) throws SQLException {
+        if (date == null) {
+            statement.setNull(index, java.sql.Types.DATE);
+            return;
+        }
+
+        statement.setDate(index, new java.sql.Date(date.getTime()));
+    }
+
+    private String getJenisKelamin() {
+        if (rbLakianggota.isSelected()) {
+            return "Laki-laki";
+        }
+
+        if (rbPerempuananggota.isSelected()) {
+            return "Perempuan";
+        }
+
+        return null;
+    }
+
+    private void pilihJenisKelamin(String jenisKelamin) {
+        bgJenkelanggota.clearSelection();
+
+        if ("Laki-laki".equalsIgnoreCase(jenisKelamin)) {
+            rbLakianggota.setSelected(true);
+        } else if ("Perempuan".equalsIgnoreCase(jenisKelamin)) {
+            rbPerempuananggota.setSelected(true);
+        }
+    }
+
+    private void refreshDataInduk() {
+        if (onDataSaved != null) {
+            onDataSaved.run();
+        }
+    }
+
+    private void resetForm() {
+        tfNoanggotakoperasi.setText("");
+        tfNamacalonanggota.setText("");
+        tfTempattglanggota.setText("");
+        tfKotakabupaten.setText("");
+        bgJenkelanggota.clearSelection();
+        tfNohpanggota.setText("");
+        taAlamatanggota.setText("");
+        tfPekerjaananggota.setText("");
+        calCalonanggota.setDate(null);
+        calTgldaftaranggota.setDate(null);
+        tfNoanggotakoperasi.requestFocus();
     }
 
     /**
@@ -110,9 +340,9 @@ public class form_pengisian extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -156,18 +386,17 @@ public class form_pengisian extends javax.swing.JFrame {
                                         .addComponent(btResetcalonanggota)
                                         .addGap(18, 18, 18)
                                         .addComponent(btExitcalonanggota))
-                                    .addComponent(jScrollPane1)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(jLabel1)))
-                .addContainerGap(92, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane1))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(37, 37, 37)
                 .addComponent(jLabel1)
-                .addGap(46, 46, 46)
+                .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(tfNoanggotakoperasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))

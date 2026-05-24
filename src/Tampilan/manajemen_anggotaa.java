@@ -4,6 +4,27 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.awt.Desktop;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author Rangga
@@ -15,6 +36,9 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
      */
     public manajemen_anggotaa() {
         initComponents();
+        aktifkanAksiManajemenAnggota();
+        aktifkanSearchRealtime();
+        loadDataAnggota();
     }
 
     /**
@@ -30,6 +54,7 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbAnggota = new javax.swing.JTable();
+        DetailAnggota = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -76,7 +101,7 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tbAnggota);
 
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        DetailAnggota.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Detail Anggota");
@@ -106,14 +131,13 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(tfNoanggota)
@@ -121,7 +145,7 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
                     .addComponent(tfTempatlahiranggota)
                     .addComponent(tfAlamatanggota)
                     .addComponent(tfNohpanggota, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -135,15 +159,39 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
                     .addComponent(tfTanggaldaftaranggota)
                     .addComponent(tfJumlahsimpanananggota)
                     .addComponent(tfJumlahPinjamananggota, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(44, 44, 44))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(37, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tfPekerjaananggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfStatusanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel10))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfTanggaldaftaranggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tfJumlahsimpanananggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel12)))
+                            .addComponent(jLabel9))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfJumlahPinjamananggota)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -163,29 +211,30 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(tfNohpanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tfPekerjaananggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tfStatusanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tfTanggaldaftaranggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel11))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tfJumlahsimpanananggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel12)))
-                            .addComponent(jLabel9))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(tfJumlahPinjamananggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                            .addComponent(tfNohpanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2)
+                    .addContainerGap(199, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout DetailAnggotaLayout = new javax.swing.GroupLayout(DetailAnggota);
+        DetailAnggota.setLayout(DetailAnggotaLayout);
+        DetailAnggotaLayout.setHorizontalGroup(
+            DetailAnggotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(DetailAnggotaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        DetailAnggotaLayout.setVerticalGroup(
+            DetailAnggotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DetailAnggotaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         btTambahanggota.setBackground(new java.awt.Color(0, 51, 204));
@@ -210,12 +259,11 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
+            .addGap(0, 716, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(btTambahanggota)
                             .addGap(18, 18, 18)
@@ -226,16 +274,19 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
                             .addComponent(btcetakanggota)
                             .addGap(18, 18, 18)
                             .addComponent(btExportanggota)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(DetailAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE)))
                     .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 591, Short.MAX_VALUE)
+            .addGap(0, 553, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -247,24 +298,560 @@ public class manajemen_anggotaa extends javax.swing.JPanel {
                         .addComponent(btExportanggota)
                         .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
-                    .addGap(32, 32, 32)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(32, 32, 32)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(DetailAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void tfSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSearchActionPerformed
-        // TODO add your handling code here:
+        loadDataAnggota(tfSearch.getText().trim());
     }//GEN-LAST:event_tfSearchActionPerformed
 
     private void btTambahanggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTambahanggotaActionPerformed
-        // TODO add your handling code here:
+        form_pengisian formAnggota = new form_pengisian();
+        formAnggota.setModeTambah();
+        formAnggota.setOnDataSaved(this::loadDataAnggota);
+        formAnggota.setVisible(true);
     }//GEN-LAST:event_btTambahanggotaActionPerformed
+
+    private void btEditanggotaActionPerformed(java.awt.event.ActionEvent evt) {
+        String noAnggota = getNoAnggotaTerpilih();
+        if (noAnggota.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pilih data anggota yang akan diedit terlebih dahulu.",
+                    "Edit Anggota",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        bukaFormEditAnggota(noAnggota);
+    }
+
+    private void btHapusanggotaActionPerformed(java.awt.event.ActionEvent evt) {
+        String noAnggota = getNoAnggotaTerpilih();
+        if (noAnggota.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pilih data anggota yang akan dihapus terlebih dahulu.",
+                    "Hapus Anggota",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int pilihan = JOptionPane.showConfirmDialog(
+                this,
+                "Hapus data anggota " + noAnggota + "?",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (pilihan != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String sql = "DELETE FROM anggota WHERE no_anggota = ?";
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, noAnggota);
+            int jumlahHapus = statement.executeUpdate();
+
+            if (jumlahHapus == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Data anggota tidak ditemukan.",
+                        "Hapus Gagal",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Data anggota berhasil dihapus.");
+            loadDataAnggota(tfSearch.getText().trim());
+            kosongkanDetailAnggota();
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal menghapus data anggota.\nPastikan anggota belum memiliki simpanan, pinjaman, atau transaksi.\n\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void btcetakanggotaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (tbAnggota.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Tidak ada data anggota yang bisa dicetak.",
+                    "Cetak Anggota",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        try {
+            File laporan = buatFileCetakAnggota();
+            Desktop desktop = Desktop.getDesktop();
+
+            if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                desktop.browse(laporan.toURI());
+            } else {
+                desktop.open(laporan);
+            }
+        } catch (IOException | UnsupportedOperationException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal mencetak data anggota.\n" + ex.getMessage(),
+                    "Cetak Gagal",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void btExportanggotaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (tbAnggota.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Tidak ada data anggota yang bisa diexport.",
+                    "Export Anggota",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Export Data Anggota");
+        fileChooser.setSelectedFile(new File("data_anggota.csv"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV File (*.csv)", "csv"));
+
+        int pilihan = fileChooser.showSaveDialog(this);
+        if (pilihan != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = fileChooser.getSelectedFile();
+        if (!file.getName().toLowerCase().endsWith(".csv")) {
+            file = new File(file.getParentFile(), file.getName() + ".csv");
+        }
+
+        try {
+            exportTableToCsv(file);
+            JOptionPane.showMessageDialog(this, "Data anggota berhasil diexport.");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal export data anggota.\n" + ex.getMessage(),
+                    "Export Gagal",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void bukaFormEditAnggota(String noAnggota) {
+        String sql = """
+                SELECT no_anggota, nama, tempat_lahir, tanggal_lahir, jenis_kelamin,
+                       alamat, kota_kabupaten, no_hp, pekerjaan, tanggal_daftar
+                FROM anggota
+                WHERE no_anggota = ?
+                LIMIT 1
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, noAnggota);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (!result.next()) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Data anggota tidak ditemukan.",
+                            "Edit Gagal",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+
+                form_pengisian formAnggota = new form_pengisian();
+                formAnggota.setModeEdit();
+                formAnggota.isiDataAnggota(
+                        result.getString("no_anggota"),
+                        result.getString("nama"),
+                        result.getString("tempat_lahir"),
+                        result.getDate("tanggal_lahir"),
+                        result.getString("jenis_kelamin"),
+                        result.getString("alamat"),
+                        result.getString("kota_kabupaten"),
+                        result.getString("no_hp"),
+                        result.getString("pekerjaan"),
+                        result.getDate("tanggal_daftar")
+                );
+                formAnggota.setOnDataSaved(this::loadDataAnggota);
+                formAnggota.setVisible(true);
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal membuka data anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void loadDataAnggota() {
+        loadDataAnggota("");
+    }
+
+    private void loadDataAnggota(String keyword) {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[]{"No", "No. Anggota", "NIK", "Nama", "No. HP", "Alamat", "Tgl daftar", "Status"},
+                0
+        );
+
+        String sql = """
+                SELECT no_anggota, nik, nama, no_hp, alamat, tanggal_daftar, status
+                FROM anggota
+                WHERE ? = ''
+                   OR no_anggota LIKE ?
+                   OR COALESCE(nik, '') LIKE ?
+                   OR nama LIKE ?
+                   OR COALESCE(no_hp, '') LIKE ?
+                   OR COALESCE(alamat, '') LIKE ?
+                   OR status LIKE ?
+                ORDER BY id_anggota DESC
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            String search = keyword == null ? "" : keyword.trim();
+            String likeSearch = "%" + search + "%";
+            statement.setString(1, search);
+            statement.setString(2, likeSearch);
+            statement.setString(3, likeSearch);
+            statement.setString(4, likeSearch);
+            statement.setString(5, likeSearch);
+            statement.setString(6, likeSearch);
+            statement.setString(7, likeSearch);
+
+            try (ResultSet result = statement.executeQuery()) {
+                int nomor = 1;
+                while (result.next()) {
+                    model.addRow(new Object[]{
+                        nomor++,
+                        result.getString("no_anggota"),
+                        result.getString("nik"),
+                        result.getString("nama"),
+                        result.getString("no_hp"),
+                        result.getString("alamat"),
+                        result.getDate("tanggal_daftar"),
+                        result.getString("status")
+                    });
+                }
+            }
+
+            tbAnggota.setModel(model);
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aktifkanSearchRealtime() {
+        tfSearch.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                cariAnggota();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                cariAnggota();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                cariAnggota();
+            }
+
+            private void cariAnggota() {
+                loadDataAnggota(tfSearch.getText().trim());
+            }
+        });
+    }
+
+    private void aktifkanAksiManajemenAnggota() {
+        btEditanggota.addActionListener(this::btEditanggotaActionPerformed);
+        btHapusanggota.addActionListener(this::btHapusanggotaActionPerformed);
+        btcetakanggota.addActionListener(this::btcetakanggotaActionPerformed);
+        btExportanggota.addActionListener(this::btExportanggotaActionPerformed);
+
+        tbAnggota.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                tampilkanDetailAnggotaTerpilih();
+            }
+        });
+
+        tbAnggota.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    String noAnggota = getNoAnggotaTerpilih();
+                    if (!noAnggota.isEmpty()) {
+                        bukaFormEditAnggota(noAnggota);
+                    }
+                }
+            }
+        });
+    }
+
+    private void tampilkanDetailAnggotaTerpilih() {
+        String noAnggota = getNoAnggotaTerpilih();
+        if (noAnggota.isEmpty()) {
+            kosongkanDetailAnggota();
+            return;
+        }
+
+        tampilkanDetailAnggota(noAnggota);
+    }
+
+    private void tbAnggotaMouseClicked(java.awt.event.MouseEvent evt) {
+        int selectedRow = tbAnggota.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        int modelRow = tbAnggota.convertRowIndexToModel(selectedRow);
+        String noAnggota = ambilNilaiTabel(modelRow, 1, "");
+        tampilkanDetailAnggota(noAnggota);
+
+        if (evt.getClickCount() == 2 && !noAnggota.isEmpty()) {
+            bukaFormEditAnggota(noAnggota);
+        }
+    }
+
+    private void tampilkanDetailAnggota(String noAnggota) {
+        String sql = """
+                SELECT
+                  a.no_anggota,
+                  a.nama,
+                  a.tempat_lahir,
+                  a.tanggal_lahir,
+                  a.alamat,
+                  a.no_hp,
+                  a.pekerjaan,
+                  a.status,
+                  a.tanggal_daftar,
+                  COALESCE(ts.total_simpanan, 0) AS total_simpanan,
+                  COALESCE(tp.total_pinjaman_aktif, 0) AS total_pinjaman
+                FROM anggota a
+                LEFT JOIN v_total_simpanan_anggota ts ON ts.id_anggota = a.id_anggota
+                LEFT JOIN v_total_pinjaman_anggota tp ON tp.id_anggota = a.id_anggota
+                WHERE a.no_anggota = ?
+                LIMIT 1
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, noAnggota);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (!result.next()) {
+                    return;
+                }
+
+                tfNoanggota.setText(result.getString("no_anggota"));
+                tfNamaanggota.setText(result.getString("nama"));
+                tfTempatlahiranggota.setText(formatTempatTanggal(
+                        result.getString("tempat_lahir"),
+                        result.getDate("tanggal_lahir")
+                ));
+                tfAlamatanggota.setText(result.getString("alamat"));
+                tfNohpanggota.setText(result.getString("no_hp"));
+                tfPekerjaananggota.setText(result.getString("pekerjaan"));
+                tfStatusanggota.setText(result.getString("status"));
+                tfTanggaldaftaranggota.setText(String.valueOf(result.getDate("tanggal_daftar")));
+                tfJumlahsimpanananggota.setText(result.getBigDecimal("total_simpanan").toPlainString());
+                tfJumlahPinjamananggota.setText(result.getBigDecimal("total_pinjaman").toPlainString());
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat detail anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private String formatTempatTanggal(String tempat, Date tanggal) {
+        String tempatLahir = tempat == null ? "" : tempat;
+        if (tanggal == null) {
+            return tempatLahir;
+        }
+
+        return tempatLahir + ", " + new SimpleDateFormat("yyyy-MM-dd").format(tanggal);
+    }
+
+    private File buatFileCetakAnggota() throws IOException {
+        File file = File.createTempFile("data_anggota_", ".html");
+        file.deleteOnExit();
+
+        TableModel model = tbAnggota.getModel();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("<!doctype html><html><head><meta charset=\"UTF-8\">");
+            writer.write("<title>Data Anggota Koperasi</title>");
+            writer.write("<style>");
+            writer.write("body{font-family:Arial,sans-serif;margin:24px;color:#111}");
+            writer.write("h1{font-size:20px;margin:0 0 16px}");
+            writer.write(".tanggal-cetak{font-size:12px;margin:0 0 14px;color:#333}");
+            writer.write("table{border-collapse:collapse;width:100%;font-size:12px}");
+            writer.write("th,td{border:1px solid #444;padding:6px;text-align:left}");
+            writer.write("th{background:#f0f0f0}");
+            writer.write("@page{size:A4;margin:18mm}");
+            writer.write("</style>");
+            writer.write("<script>");
+            writer.write("window.addEventListener('load',function(){setTimeout(function(){window.print();},400);});");
+            writer.write("</script></head><body>");
+            writer.write("<h1>Data Anggota Koperasi</h1>");
+            writer.write("<p class=\"tanggal-cetak\">Tanggal Cetak: ");
+            writer.write(escapeHtml(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())));
+            writer.write("</p>");
+            writer.write("<table><thead><tr>");
+
+            for (int column = 0; column < model.getColumnCount(); column++) {
+                writer.write("<th>");
+                writer.write(escapeHtml(model.getColumnName(column)));
+                writer.write("</th>");
+            }
+
+            writer.write("</tr></thead><tbody>");
+
+            for (int row = 0; row < model.getRowCount(); row++) {
+                writer.write("<tr>");
+                for (int column = 0; column < model.getColumnCount(); column++) {
+                    Object value = model.getValueAt(row, column);
+                    writer.write("<td>");
+                    writer.write(escapeHtml(value == null ? "" : value.toString()));
+                    writer.write("</td>");
+                }
+                writer.write("</tr>");
+            }
+
+            writer.write("</tbody></table></body></html>");
+        }
+
+        return file;
+    }
+
+    private void exportTableToCsv(File file) throws IOException {
+        TableModel model = tbAnggota.getModel();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (int column = 0; column < model.getColumnCount(); column++) {
+                writer.write(escapeCsv(model.getColumnName(column)));
+                if (column < model.getColumnCount() - 1) {
+                    writer.write(",");
+                }
+            }
+            writer.newLine();
+
+            for (int row = 0; row < model.getRowCount(); row++) {
+                for (int column = 0; column < model.getColumnCount(); column++) {
+                    Object value = model.getValueAt(row, column);
+                    writer.write(escapeCsv(value == null ? "" : value.toString()));
+                    if (column < model.getColumnCount() - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.newLine();
+            }
+        }
+    }
+
+    private String escapeCsv(String value) {
+        String text = value == null ? "" : value;
+        boolean perluQuote = text.contains(",") || text.contains("\"") || text.contains("\n") || text.contains("\r");
+        text = text.replace("\"", "\"\"");
+        return perluQuote ? "\"" + text + "\"" : text;
+    }
+
+    private String escapeHtml(String value) {
+        String text = value == null ? "" : value;
+        return text
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+
+    private String ambilNilaiTabel(int row, int column, String nilaiDefault) {
+        Object value = tbAnggota.getModel().getValueAt(row, column);
+        if (value == null || value.toString().trim().isEmpty()) {
+            return nilaiDefault;
+        }
+
+        return value.toString();
+    }
+
+    private Date parseTanggal(String tanggal) {
+        if (tanggal == null || tanggal.isBlank()) {
+            return null;
+        }
+
+        String[] formats = {"yyyy-MM-dd", "dd-MM-yyyy", "dd/MM/yyyy"};
+        for (String format : formats) {
+            try {
+                return new SimpleDateFormat(format).parse(tanggal);
+            } catch (ParseException ex) {
+                // Coba format tanggal berikutnya.
+            }
+        }
+
+        return null;
+    }
+
+    private String getNoAnggotaTerpilih() {
+        int selectedRow = tbAnggota.getSelectedRow();
+        if (selectedRow != -1) {
+            int modelRow = tbAnggota.convertRowIndexToModel(selectedRow);
+            return ambilNilaiTabel(modelRow, 1, "").trim();
+        }
+
+        return tfNoanggota.getText().trim();
+    }
+
+    private void kosongkanDetailAnggota() {
+        tfNoanggota.setText("");
+        tfNamaanggota.setText("");
+        tfTempatlahiranggota.setText("");
+        tfAlamatanggota.setText("");
+        tfNohpanggota.setText("");
+        tfPekerjaananggota.setText("");
+        tfStatusanggota.setText("");
+        tfTanggaldaftaranggota.setText("");
+        tfJumlahsimpanananggota.setText("");
+        tfJumlahPinjamananggota.setText("");
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel DetailAnggota;
     private javax.swing.JButton btEditanggota;
     private javax.swing.JButton btExportanggota;
     private javax.swing.JButton btHapusanggota;
