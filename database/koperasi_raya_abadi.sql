@@ -20,7 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `koperasi_raya_abadi`
 --
-
+CREATE DATABASE IF NOT EXISTS `koperasi_raya_abadi`;
+USE `koperasi_raya_abadi`;
 -- --------------------------------------------------------
 
 --
