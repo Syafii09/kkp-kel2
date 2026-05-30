@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -64,7 +65,15 @@ public class form_pengisian extends javax.swing.JFrame {
     public void isiDataAnggota(String noAnggota, String nama, String tempatLahir,
             Date tanggalLahir, String jenisKelamin, String alamat,
             String kotaKabupaten, String noHp, String pekerjaan, Date tanggalDaftar) {
+        isiDataAnggota(noAnggota, "", nama, tempatLahir, tanggalLahir, jenisKelamin,
+                alamat, kotaKabupaten, noHp, pekerjaan, tanggalDaftar);
+    }
+
+    public void isiDataAnggota(String noAnggota, String nik, String nama, String tempatLahir,
+            Date tanggalLahir, String jenisKelamin, String alamat,
+            String kotaKabupaten, String noHp, String pekerjaan, Date tanggalDaftar) {
         tfNoanggotakoperasi.setText(noAnggota);
+        setNIK(nik);
         tfNamacalonanggota.setText(nama);
         tfTempattglanggota.setText(tempatLahir);
         calCalonanggota.setDate(tanggalLahir);
@@ -115,9 +124,9 @@ public class form_pengisian extends javax.swing.JFrame {
     private void tambahAnggota() {
         String sql = """
                 INSERT INTO anggota (
-                  no_anggota, nama, tempat_lahir, tanggal_lahir, jenis_kelamin,
+                  no_anggota, nik, nama, tempat_lahir, tanggal_lahir, jenis_kelamin,
                   alamat, kota_kabupaten, no_hp, pekerjaan, tanggal_daftar, status
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Aktif')
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Aktif')
                 """;
 
         try (Connection connection = Koneksi.getConnection();
@@ -143,6 +152,7 @@ public class form_pengisian extends javax.swing.JFrame {
         String sql = """
                 UPDATE anggota
                 SET no_anggota = ?,
+                    nik = ?,
                     nama = ?,
                     tempat_lahir = ?,
                     tanggal_lahir = ?,
@@ -159,7 +169,7 @@ public class form_pengisian extends javax.swing.JFrame {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             isiParameterAnggota(statement);
-            statement.setString(11, noAnggotaLama);
+            statement.setString(12, noAnggotaLama);
 
             int jumlahUpdate = statement.executeUpdate();
             if (jumlahUpdate == 0) {
@@ -187,15 +197,25 @@ public class form_pengisian extends javax.swing.JFrame {
 
     private void isiParameterAnggota(PreparedStatement statement) throws SQLException {
         statement.setString(1, tfNoanggotakoperasi.getText().trim());
-        statement.setString(2, tfNamacalonanggota.getText().trim());
-        statement.setString(3, tfTempattglanggota.getText().trim());
-        setTanggal(statement, 4, calCalonanggota.getDate());
-        statement.setString(5, getJenisKelamin());
-        statement.setString(6, taAlamatanggota.getText().trim());
-        statement.setString(7, tfKotakabupaten.getText().trim());
-        statement.setString(8, tfNohpanggota.getText().trim());
-        statement.setString(9, tfPekerjaananggota.getText().trim());
-        setTanggal(statement, 10, calTgldaftaranggota.getDate());
+        setStringNullable(statement, 2, getNIK());
+        statement.setString(3, tfNamacalonanggota.getText().trim());
+        statement.setString(4, tfTempattglanggota.getText().trim());
+        setTanggal(statement, 5, calCalonanggota.getDate());
+        statement.setString(6, getJenisKelamin());
+        statement.setString(7, taAlamatanggota.getText().trim());
+        statement.setString(8, tfKotakabupaten.getText().trim());
+        statement.setString(9, tfNohpanggota.getText().trim());
+        statement.setString(10, tfPekerjaananggota.getText().trim());
+        setTanggal(statement, 11, calTgldaftaranggota.getDate());
+    }
+
+    private void setStringNullable(PreparedStatement statement, int index, String value) throws SQLException {
+        if (value == null || value.isBlank()) {
+            statement.setNull(index, java.sql.Types.VARCHAR);
+            return;
+        }
+
+        statement.setString(index, value.trim());
     }
 
     private void setTanggal(PreparedStatement statement, int index, Date date) throws SQLException {
@@ -229,6 +249,29 @@ public class form_pengisian extends javax.swing.JFrame {
         }
     }
 
+    private String getNIK() {
+        JTextField field = getNIKField();
+        return field == null ? "" : field.getText().trim();
+    }
+
+    private void setNIK(String nik) {
+        JTextField field = getNIKField();
+        if (field != null) {
+            field.setText(nik == null ? "" : nik);
+        }
+    }
+
+    private JTextField getNIKField() {
+        try {
+            java.lang.reflect.Field field = getClass().getDeclaredField("tfNIK");
+            field.setAccessible(true);
+            Object value = field.get(this);
+            return value instanceof JTextField ? (JTextField) value : null;
+        } catch (NoSuchFieldException | IllegalAccessException ex) {
+            return null;
+        }
+    }
+
     private void refreshDataInduk() {
         if (onDataSaved != null) {
             onDataSaved.run();
@@ -237,6 +280,7 @@ public class form_pengisian extends javax.swing.JFrame {
 
     private void resetForm() {
         tfNoanggotakoperasi.setText("");
+        setNIK("");
         tfNamacalonanggota.setText("");
         tfTempattglanggota.setText("");
         tfKotakabupaten.setText("");
@@ -284,6 +328,8 @@ public class form_pengisian extends javax.swing.JFrame {
         btSimpancalonanggota = new javax.swing.JButton();
         btResetcalonanggota = new javax.swing.JButton();
         btExitcalonanggota = new javax.swing.JButton();
+        tfNIK = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -335,6 +381,8 @@ public class form_pengisian extends javax.swing.JFrame {
         btExitcalonanggota.setForeground(new java.awt.Color(255, 255, 255));
         btExitcalonanggota.setText("EXIT");
 
+        jLabel11.setText("NIK");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -342,20 +390,31 @@ public class form_pengisian extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfNoanggotakoperasi, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfNIK, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tfTempattglanggota, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(calCalonanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(tfNoanggotakoperasi, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tfNamacalonanggota)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -386,9 +445,7 @@ public class form_pengisian extends javax.swing.JFrame {
                                         .addComponent(btResetcalonanggota)
                                         .addGap(18, 18, 18)
                                         .addComponent(btExitcalonanggota))
-                                    .addComponent(jScrollPane1))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -400,7 +457,11 @@ public class form_pengisian extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(tfNoanggotakoperasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(tfNIK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(tfNamacalonanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -441,7 +502,7 @@ public class form_pengisian extends javax.swing.JFrame {
                         .addComponent(btSimpancalonanggota)
                         .addComponent(btResetcalonanggota)
                         .addComponent(btExitcalonanggota)))
-                .addGap(76, 76, 76))
+                .addGap(60, 60, 60))
         );
 
         pack();
@@ -485,6 +546,7 @@ public class form_pengisian extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser calTgldaftaranggota;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -498,6 +560,7 @@ public class form_pengisian extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbPerempuananggota;
     private javax.swing.JTextArea taAlamatanggota;
     private javax.swing.JTextField tfKotakabupaten;
+    private javax.swing.JTextField tfNIK;
     private javax.swing.JTextField tfNamacalonanggota;
     private javax.swing.JTextField tfNoanggotakoperasi;
     private javax.swing.JTextField tfNohpanggota;

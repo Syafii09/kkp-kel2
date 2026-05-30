@@ -4,17 +4,36 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.beans.PropertyChangeEvent;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Rangga
  */
-public class tampilan_baru extends javax.swing.JPanel {
+public class transaksi extends javax.swing.JPanel {
 
     /**
      * Creates new form tampilan_baru
      */
-    public tampilan_baru() {
+    public transaksi() {
         initComponents();
+        cbJenTransaksi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+            "- Semua -", "Pinjaman", "Simpanan", "Angsuran"
+        }));
+        aktifkanFilterRealtime();
+        loadDataTransaksi();
     }
 
     /**
@@ -56,8 +75,20 @@ public class tampilan_baru extends javax.swing.JPanel {
             new String [] {
                 "No", "Tanggal", "Jenis Transaksi", "No. Anggota", "Anggota", "Debet", "Kredit", "Keterangan"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tabeltransaksi);
+        if (tabeltransaksi.getColumnModel().getColumnCount() > 0) {
+            tabeltransaksi.getColumnModel().getColumn(0).setResizable(false);
+            tabeltransaksi.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
 
         jLabel4.setText("Total Debet :");
 
@@ -67,31 +98,31 @@ public class tampilan_baru extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 730, Short.MAX_VALUE)
+            .addGap(0, 731, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbJenTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel2)
-                                .addGap(25, 25, 25)
-                                .addComponent(jdTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(cbJenTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel2)
+                            .addGap(25, 25, 25)
+                            .addComponent(jdTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(24, 24, 24)
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(54, 54, 54)
-                            .addComponent(jLabel4)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGap(424, 424, 424)
-                            .addComponent(jLabel5)))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(107, 107, 107)))
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,18 +140,130 @@ public class tampilan_baru extends javax.swing.JPanel {
                             .addComponent(cbJenTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addGap(18, 18, 18)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(42, 42, 42)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
                         .addComponent(jLabel5))
-                    .addContainerGap(115, Short.MAX_VALUE)))
+                    .addGap(115, 115, 115)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbJenTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbJenTransaksiActionPerformed
-        // TODO add your handling code here:
+        loadDataTransaksi();
     }//GEN-LAST:event_cbJenTransaksiActionPerformed
+
+    private void loadDataTransaksi() {
+        DefaultTableModel model = (DefaultTableModel) tabeltransaksi.getModel();
+        model.setRowCount(0);
+
+        String sql = """
+                SELECT t.tanggal, t.jenis_transaksi, a.no_anggota, a.nama,
+                       t.debet, t.kredit, t.keterangan
+                FROM transaksi t
+                LEFT JOIN anggota a ON a.id_anggota = t.id_anggota
+                WHERE (? = '- Semua -' OR t.jenis_transaksi = ?)
+                  AND (? IS NULL OR DATE(t.tanggal) = ?)
+                  AND (
+                    ? = ''
+                    OR t.jenis_transaksi LIKE ?
+                    OR COALESCE(a.no_anggota, '') LIKE ?
+                    OR COALESCE(a.nama, '') LIKE ?
+                    OR COALESCE(t.keterangan, '') LIKE ?
+                    OR CAST(t.tanggal AS CHAR) LIKE ?
+                  )
+                ORDER BY t.id_transaksi ASC
+                """;
+
+        BigDecimal totalDebet = BigDecimal.ZERO;
+        BigDecimal totalKredit = BigDecimal.ZERO;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            String jenis = cbJenTransaksi.getSelectedItem() == null ? "- Semua -" : cbJenTransaksi.getSelectedItem().toString();
+            java.sql.Date tanggal = jdTanggal.getDate() == null ? null : new java.sql.Date(jdTanggal.getDate().getTime());
+            String search = tfSearch.getText().trim();
+            String likeSearch = "%" + search + "%";
+
+            statement.setString(1, jenis);
+            statement.setString(2, jenis);
+            statement.setDate(3, tanggal);
+            statement.setDate(4, tanggal);
+            statement.setString(5, search);
+            statement.setString(6, likeSearch);
+            statement.setString(7, likeSearch);
+            statement.setString(8, likeSearch);
+            statement.setString(9, likeSearch);
+            statement.setString(10, likeSearch);
+
+            try (ResultSet result = statement.executeQuery()) {
+                int nomor = 1;
+                while (result.next()) {
+                    BigDecimal debet = result.getBigDecimal("debet");
+                    BigDecimal kredit = result.getBigDecimal("kredit");
+                    debet = debet == null ? BigDecimal.ZERO : debet;
+                    kredit = kredit == null ? BigDecimal.ZERO : kredit;
+
+                    totalDebet = totalDebet.add(debet);
+                    totalKredit = totalKredit.add(kredit);
+
+                    model.addRow(new Object[]{
+                        nomor++,
+                        result.getTimestamp("tanggal"),
+                        result.getString("jenis_transaksi"),
+                        result.getString("no_anggota"),
+                        result.getString("nama"),
+                        formatRupiah(debet),
+                        formatRupiah(kredit),
+                        result.getString("keterangan")
+                    });
+                }
+            }
+
+            jLabel4.setText("Total Debet : " + formatRupiah(totalDebet));
+            jLabel5.setText("Total Kredit : " + formatRupiah(totalKredit));
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data transaksi.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aktifkanFilterRealtime() {
+        tfSearch.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                loadDataTransaksi();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                loadDataTransaksi();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                loadDataTransaksi();
+            }
+        });
+
+        jdTanggal.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if ("date".equals(evt.getPropertyName())) {
+                loadDataTransaksi();
+            }
+        });
+    }
+
+    private String formatRupiah(BigDecimal value) {
+        BigDecimal angka = value == null ? BigDecimal.ZERO : value;
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(angka);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

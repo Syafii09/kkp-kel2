@@ -4,17 +4,51 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author hp
  */
 public class manajemen_simpanan extends javax.swing.JPanel {
+    private final List<String> pilihanAnggota = new ArrayList<>();
+    private final Map<String, String> namaAnggotaByPilihan = new HashMap<>();
+    private boolean sedangFilterAnggota = false;
 
     /**
      * Creates new form manajemen_simpanan
      */
     public manajemen_simpanan() {
         initComponents();
+        tfNama.setEditable(false);
+        jTextField1.setEditable(false);
+        muatJenisSimpanan();
+        muatComboAnggota();
+        aktifkanSearchComboAnggota();
+        aktifkanSearchSimpanan();
+        btReset.addActionListener(e -> resetFormSimpanan());
+        cbNoanggota.setSelectedItem("");
+        loadDataSimpanan();
     }
 
     /**
@@ -35,11 +69,11 @@ public class manajemen_simpanan extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         btSimpan = new javax.swing.JButton();
         btReset = new javax.swing.JButton();
-        tfAnggota = new javax.swing.JTextField();
         tfNama = new javax.swing.JTextField();
         cbjenis = new javax.swing.JComboBox<>();
         tfNominal = new javax.swing.JTextField();
         tfKeterangan = new javax.swing.JTextField();
+        cbNoanggota = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
@@ -85,6 +119,9 @@ public class manajemen_simpanan extends javax.swing.JPanel {
 
         cbjenis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Pilih--", "Simpanan Wajib", "Simpanan Pokok" }));
 
+        cbNoanggota.setEditable(true);
+        cbNoanggota.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -104,11 +141,11 @@ public class manajemen_simpanan extends javax.swing.JPanel {
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(25, 25, 25)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfAnggota)
                     .addComponent(tfNama)
                     .addComponent(cbjenis, 0, 130, Short.MAX_VALUE)
                     .addComponent(tfNominal)
-                    .addComponent(tfKeterangan))
+                    .addComponent(tfKeterangan)
+                    .addComponent(cbNoanggota, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -122,7 +159,7 @@ public class manajemen_simpanan extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tfAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbNoanggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -164,11 +201,26 @@ public class manajemen_simpanan extends javax.swing.JPanel {
             new String [] {
                 "No.", "Tanggal", "Jenis Simpanan", "Nominal", "Saldo"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbSimpanan.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tbSimpanan);
+        if (tbSimpanan.getColumnModel().getColumnCount() > 0) {
+            tbSimpanan.getColumnModel().getColumn(0).setResizable(false);
+            tbSimpanan.getColumnModel().getColumn(0).setPreferredWidth(2);
+        }
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Total Saldo Simpanan :");
+
+        jTextField1.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -210,11 +262,11 @@ public class manajemen_simpanan extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(74, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextField1))
+                        .addGap(19, 19, 19))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -223,8 +275,409 @@ public class manajemen_simpanan extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSimpanActionPerformed
-        // TODO add your handling code here:
+        simpanDataSimpanan();
     }//GEN-LAST:event_btSimpanActionPerformed
+
+    private void simpanDataSimpanan() {
+        String noAnggota = getNoAnggotaTerpilih();
+        String jenisSimpanan = cbjenis.getSelectedItem() == null ? "" : cbjenis.getSelectedItem().toString();
+        BigDecimal nominal = parseNominal(tfNominal.getText());
+
+        if (noAnggota.isEmpty() || tfNama.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pilih No. Anggota terlebih dahulu.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (jenisSimpanan.equals("--Pilih--") || jenisSimpanan.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Pilih jenis simpanan terlebih dahulu.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (nominal.compareTo(BigDecimal.ZERO) <= 0) {
+            JOptionPane.showMessageDialog(this, "Nominal simpanan harus lebih dari 0.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try (Connection connection = Koneksi.getConnection()) {
+            connection.setAutoCommit(false);
+
+            try {
+                int idAnggota = getIdAnggota(connection, noAnggota);
+                int idJenisSimpanan = getIdJenisSimpanan(connection, jenisSimpanan);
+                BigDecimal saldoBaru = getSaldoSimpananAnggota(connection, idAnggota).add(nominal);
+                int idSimpanan = insertSimpanan(connection, idAnggota, idJenisSimpanan, nominal, saldoBaru);
+                insertTransaksiSimpanan(connection, idAnggota, idSimpanan, nominal);
+
+                connection.commit();
+                JOptionPane.showMessageDialog(this, "Data simpanan berhasil disimpan.");
+                resetFormSimpanan();
+                loadDataSimpanan(jTextField5.getText().trim());
+            } catch (SQLException | RuntimeException ex) {
+                connection.rollback();
+                throw ex;
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal menyimpan data simpanan.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void muatJenisSimpanan() {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        model.addElement("--Pilih--");
+
+        String sql = "SELECT nama_jenis FROM jenis_simpanan ORDER BY id_jenis_simpanan ASC";
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                model.addElement(result.getString("nama_jenis"));
+            }
+
+            cbjenis.setModel(model);
+        } catch (SQLException | RuntimeException ex) {
+            cbjenis.setModel(new DefaultComboBoxModel<>(new String[]{"--Pilih--", "Simpanan Wajib", "Simpanan Pokok"}));
+        }
+    }
+
+    private int getIdAnggota(Connection connection, String noAnggota) throws SQLException {
+        String sql = "SELECT id_anggota FROM anggota WHERE no_anggota = ? AND status = 'Aktif' LIMIT 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, noAnggota);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getInt("id_anggota");
+                }
+            }
+        }
+
+        throw new SQLException("Anggota tidak ditemukan atau tidak aktif.");
+    }
+
+    private int getIdJenisSimpanan(Connection connection, String namaJenis) throws SQLException {
+        String sql = "SELECT id_jenis_simpanan FROM jenis_simpanan WHERE nama_jenis = ? LIMIT 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, namaJenis);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getInt("id_jenis_simpanan");
+                }
+            }
+        }
+
+        throw new SQLException("Jenis simpanan tidak ditemukan.");
+    }
+
+    private BigDecimal getSaldoSimpananAnggota(Connection connection, int idAnggota) throws SQLException {
+        String sql = "SELECT COALESCE(SUM(nominal), 0) AS saldo FROM simpanan WHERE id_anggota = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idAnggota);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getBigDecimal("saldo");
+                }
+            }
+        }
+
+        return BigDecimal.ZERO;
+    }
+
+    private int insertSimpanan(Connection connection, int idAnggota, int idJenisSimpanan,
+            BigDecimal nominal, BigDecimal saldoBaru) throws SQLException {
+        String sql = """
+                INSERT INTO simpanan (id_anggota, id_jenis_simpanan, tanggal, nominal, saldo, keterangan)
+                VALUES (?, ?, CURDATE(), ?, ?, ?)
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, idAnggota);
+            statement.setInt(2, idJenisSimpanan);
+            statement.setBigDecimal(3, nominal);
+            statement.setBigDecimal(4, saldoBaru);
+            statement.setString(5, tfKeterangan.getText().trim());
+            statement.executeUpdate();
+
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getInt(1);
+                }
+            }
+        }
+
+        throw new SQLException("ID simpanan gagal dibuat.");
+    }
+
+    private void insertTransaksiSimpanan(Connection connection, int idAnggota, int idSimpanan,
+            BigDecimal nominal) throws SQLException {
+        String sql = """
+                INSERT INTO transaksi (
+                  jenis_transaksi, id_anggota, referensi_tabel, referensi_id, debet, kredit, keterangan
+                ) VALUES ('Simpanan', ?, 'simpanan', ?, ?, 0, ?)
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idAnggota);
+            statement.setInt(2, idSimpanan);
+            statement.setBigDecimal(3, nominal);
+            statement.setString(4, tfKeterangan.getText().trim());
+            statement.executeUpdate();
+        }
+    }
+
+    private void loadDataSimpanan() {
+        loadDataSimpanan("");
+    }
+
+    private void loadDataSimpanan(String keyword) {
+        DefaultTableModel model = (DefaultTableModel) tbSimpanan.getModel();
+        model.setRowCount(0);
+
+        String sql = """
+                SELECT s.tanggal, a.no_anggota, a.nama, js.nama_jenis, s.nominal, s.saldo, s.keterangan
+                FROM simpanan s
+                JOIN anggota a ON a.id_anggota = s.id_anggota
+                JOIN jenis_simpanan js ON js.id_jenis_simpanan = s.id_jenis_simpanan
+                WHERE ? = ''
+                   OR a.no_anggota LIKE ?
+                   OR a.nama LIKE ?
+                   OR js.nama_jenis LIKE ?
+                   OR COALESCE(s.keterangan, '') LIKE ?
+                   OR CAST(s.tanggal AS CHAR) LIKE ?
+                ORDER BY s.id_simpanan ASC
+                """;
+
+        BigDecimal totalSaldo = BigDecimal.ZERO;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            String search = keyword == null ? "" : keyword.trim();
+            String likeSearch = "%" + search + "%";
+            statement.setString(1, search);
+            statement.setString(2, likeSearch);
+            statement.setString(3, likeSearch);
+            statement.setString(4, likeSearch);
+            statement.setString(5, likeSearch);
+            statement.setString(6, likeSearch);
+
+            try (ResultSet result = statement.executeQuery()) {
+                int nomor = 1;
+                while (result.next()) {
+                    BigDecimal nominal = result.getBigDecimal("nominal");
+                    BigDecimal saldo = result.getBigDecimal("saldo");
+                    totalSaldo = totalSaldo.add(nominal);
+
+                    model.addRow(new Object[]{
+                        nomor++,
+                        result.getDate("tanggal"),
+                        result.getString("nama_jenis"),
+                        formatRupiah(nominal),
+                        formatRupiah(saldo)
+                    });
+                }
+            }
+
+            jTextField1.setText(formatRupiah(totalSaldo));
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data simpanan.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void muatComboAnggota() {
+        pilihanAnggota.clear();
+        namaAnggotaByPilihan.clear();
+
+        String sql = """
+                SELECT no_anggota, nama
+                FROM anggota
+                WHERE status = 'Aktif'
+                ORDER BY id_anggota ASC
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                String noAnggota = result.getString("no_anggota");
+                String nama = result.getString("nama");
+                String pilihan = noAnggota + " - " + nama;
+
+                pilihanAnggota.add(pilihan);
+                namaAnggotaByPilihan.put(pilihan, nama);
+            }
+
+            isiModelComboAnggota(pilihanAnggota, "");
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aktifkanSearchComboAnggota() {
+        JTextField editor = (JTextField) cbNoanggota.getEditor().getEditorComponent();
+
+        cbNoanggota.addActionListener(e -> isiNamaAnggotaTerpilih());
+        editor.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterAnggota();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterAnggota();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filterAnggota();
+            }
+
+            private void filterAnggota() {
+                if (sedangFilterAnggota) {
+                    return;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    String keyword = editor.getText();
+                    List<String> hasil = new ArrayList<>();
+
+                    for (String pilihan : pilihanAnggota) {
+                        if (pilihan.toLowerCase().contains(keyword.toLowerCase())) {
+                            hasil.add(pilihan);
+                        }
+                    }
+
+                    isiModelComboAnggota(hasil, keyword);
+                    if (!keyword.isBlank()) {
+                        cbNoanggota.showPopup();
+                    }
+                });
+            }
+        });
+    }
+
+    private void aktifkanSearchSimpanan() {
+        jTextField5.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                cariSimpanan();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                cariSimpanan();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                cariSimpanan();
+            }
+
+            private void cariSimpanan() {
+                loadDataSimpanan(jTextField5.getText().trim());
+            }
+        });
+    }
+
+    private void isiModelComboAnggota(List<String> data, String teksEditor) {
+        sedangFilterAnggota = true;
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        for (String item : data) {
+            model.addElement(item);
+        }
+
+        cbNoanggota.setModel(model);
+        cbNoanggota.setSelectedItem(teksEditor);
+
+        sedangFilterAnggota = false;
+    }
+
+    private void isiNamaAnggotaTerpilih() {
+        Object selectedItem = cbNoanggota.getSelectedItem();
+        if (selectedItem == null) {
+            tfNama.setText("");
+            return;
+        }
+
+        String pilihan = selectedItem.toString();
+        tfNama.setText(namaAnggotaByPilihan.getOrDefault(pilihan, ""));
+    }
+
+    private String getNoAnggotaTerpilih() {
+        Object selectedItem = cbNoanggota.getSelectedItem();
+        if (selectedItem == null) {
+            return "";
+        }
+
+        String pilihan = selectedItem.toString().trim();
+        int separatorIndex = pilihan.indexOf(" - ");
+        if (separatorIndex > -1) {
+            return pilihan.substring(0, separatorIndex).trim();
+        }
+
+        return pilihan;
+    }
+
+    private BigDecimal parseNominal(String value) {
+        if (value == null || value.isBlank()) {
+            return BigDecimal.ZERO;
+        }
+
+        String cleaned = value
+                .replace("Rp", "")
+                .replace("rp", "")
+                .replace(".", "")
+                .replace(",", ".")
+                .trim();
+
+        try {
+            return new BigDecimal(cleaned);
+        } catch (NumberFormatException ex) {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    private String formatRupiah(BigDecimal value) {
+        BigDecimal angka = value == null ? BigDecimal.ZERO : value;
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(angka);
+    }
+
+    private void resetFormSimpanan() {
+        cbNoanggota.setSelectedItem("");
+        tfNama.setText("");
+        cbjenis.setSelectedIndex(0);
+        tfNominal.setText("");
+        tfKeterangan.setText("");
+        cbNoanggota.requestFocus();
+    }
 
     /**
      * @param args the command line arguments
@@ -264,6 +717,7 @@ public class manajemen_simpanan extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btReset;
     private javax.swing.JButton btSimpan;
+    private javax.swing.JComboBox<String> cbNoanggota;
     private javax.swing.JComboBox<String> cbjenis;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -279,7 +733,6 @@ public class manajemen_simpanan extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTable tbSimpanan;
-    private javax.swing.JTextField tfAnggota;
     private javax.swing.JTextField tfKeterangan;
     private javax.swing.JTextField tfNama;
     private javax.swing.JTextField tfNominal;

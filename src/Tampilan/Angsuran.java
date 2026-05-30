@@ -4,17 +4,50 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author feryo
  */
 public class Angsuran extends javax.swing.JPanel {
+    private final List<String> pilihanPinjaman = new ArrayList<>();
+    private final Map<String, Integer> idPinjamanByPilihan = new HashMap<>();
+    private final Map<String, String> namaAnggotaByPilihan = new HashMap<>();
+    private boolean sedangFilterPinjaman = false;
 
     /**
      * Creates new form Angsuran
      */
     public Angsuran() {
         initComponents();
+        tnamaang.setEditable(false);
+        jTextField5.setEditable(false);
+        cbbnopinjaman.setEditable(true);
+        muatComboPinjaman();
+        aktifkanSearchComboPinjaman();
+        btnresetang.addActionListener(e -> resetFormAngsuran());
+        resetFormAngsuran();
     }
 
     /**
@@ -258,7 +291,7 @@ public class Angsuran extends javax.swing.JPanel {
     }//GEN-LAST:event_tketangActionPerformed
 
     private void btnsimpanangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanangActionPerformed
-        // TODO add your handling code here:
+        simpanDataAngsuran();
     }//GEN-LAST:event_btnsimpanangActionPerformed
 
     private void tangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tangActionPerformed
@@ -268,6 +301,426 @@ public class Angsuran extends javax.swing.JPanel {
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
+
+    private void simpanDataAngsuran() {
+        Integer idPinjaman = getIdPinjamanTerpilih();
+        int angsuranKe = parseInteger(tang.getText());
+        BigDecimal jumlahBayar = parseNominal(tjmlang.getText());
+        Date tanggalBayar = tglangs.getDate();
+
+        if (idPinjaman == null) {
+            JOptionPane.showMessageDialog(this, "Pilih No. Pinjaman terlebih dahulu.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (angsuranKe <= 0) {
+            JOptionPane.showMessageDialog(this, "Angsuran ke harus lebih dari 0.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (tanggalBayar == null) {
+            JOptionPane.showMessageDialog(this, "Tanggal bayar wajib diisi.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (jumlahBayar.compareTo(BigDecimal.ZERO) <= 0) {
+            JOptionPane.showMessageDialog(this, "Jumlah bayar harus lebih dari 0.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try (Connection connection = Koneksi.getConnection()) {
+            connection.setAutoCommit(false);
+
+            try {
+                PinjamanInfo pinjaman = getPinjamanInfo(connection, idPinjaman);
+                BigDecimal sisaSebelumBayar = pinjaman.jumlahPinjaman.subtract(pinjaman.totalDibayar);
+
+                if (sisaSebelumBayar.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Pinjaman ini sudah lunas.", "Validasi", JOptionPane.WARNING_MESSAGE);
+                    connection.rollback();
+                    return;
+                }
+
+                if (jumlahBayar.compareTo(sisaSebelumBayar) > 0) {
+                    int pilihan = JOptionPane.showConfirmDialog(
+                            this,
+                            "Jumlah bayar melebihi sisa pinjaman.\nSisa pinjaman: " + formatRupiah(sisaSebelumBayar) + "\nTetap simpan?",
+                            "Konfirmasi",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
+                    if (pilihan != JOptionPane.YES_OPTION) {
+                        connection.rollback();
+                        return;
+                    }
+                }
+
+                int idAngsuran = insertAngsuran(connection, idPinjaman, angsuranKe, tanggalBayar, jumlahBayar);
+                insertTransaksiAngsuran(connection, pinjaman.idAnggota, idAngsuran, jumlahBayar);
+
+                BigDecimal sisaSetelahBayar = sisaSebelumBayar.subtract(jumlahBayar);
+                if (sisaSetelahBayar.compareTo(BigDecimal.ZERO) <= 0) {
+                    updateStatusPinjaman(connection, idPinjaman, "Lunas");
+                }
+
+                connection.commit();
+                JOptionPane.showMessageDialog(this, "Data angsuran berhasil disimpan.");
+                muatComboPinjaman();
+                resetFormAngsuran();
+            } catch (SQLException | RuntimeException ex) {
+                connection.rollback();
+                throw ex;
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal menyimpan data angsuran.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void muatComboPinjaman() {
+        pilihanPinjaman.clear();
+        idPinjamanByPilihan.clear();
+        namaAnggotaByPilihan.clear();
+
+        String sql = """
+                SELECT p.id_pinjaman, p.no_pinjaman, a.no_anggota, a.nama
+                FROM pinjaman p
+                JOIN anggota a ON a.id_anggota = p.id_anggota
+                WHERE p.status = 'Aktif'
+                ORDER BY p.id_pinjaman ASC
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                String pilihan = result.getString("no_pinjaman") + " - "
+                        + result.getString("no_anggota") + " - "
+                        + result.getString("nama");
+
+                pilihanPinjaman.add(pilihan);
+                idPinjamanByPilihan.put(pilihan, result.getInt("id_pinjaman"));
+                namaAnggotaByPilihan.put(pilihan, result.getString("nama"));
+            }
+
+            isiModelComboPinjaman(pilihanPinjaman, "");
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data pinjaman.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aktifkanSearchComboPinjaman() {
+        JTextField editor = (JTextField) cbbnopinjaman.getEditor().getEditorComponent();
+
+        cbbnopinjaman.addActionListener(e -> tampilkanPinjamanTerpilih());
+        editor.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterPinjaman();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterPinjaman();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filterPinjaman();
+            }
+
+            private void filterPinjaman() {
+                if (sedangFilterPinjaman) {
+                    return;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    String keyword = editor.getText();
+                    List<String> hasil = new ArrayList<>();
+
+                    for (String pilihan : pilihanPinjaman) {
+                        if (pilihan.toLowerCase().contains(keyword.toLowerCase())) {
+                            hasil.add(pilihan);
+                        }
+                    }
+
+                    isiModelComboPinjaman(hasil, keyword);
+                    if (!keyword.isBlank()) {
+                        cbbnopinjaman.showPopup();
+                    }
+                });
+            }
+        });
+    }
+
+    private void isiModelComboPinjaman(List<String> data, String teksEditor) {
+        sedangFilterPinjaman = true;
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        for (String item : data) {
+            model.addElement(item);
+        }
+
+        cbbnopinjaman.setModel(model);
+        cbbnopinjaman.setSelectedItem(teksEditor);
+
+        sedangFilterPinjaman = false;
+    }
+
+    private void tampilkanPinjamanTerpilih() {
+        Integer idPinjaman = getIdPinjamanTerpilih();
+        Object selectedItem = cbbnopinjaman.getSelectedItem();
+
+        if (idPinjaman == null || selectedItem == null) {
+            tnamaang.setText("");
+            jTextField5.setText("SISA PINJAMAN");
+            kosongkanTabelAngsuran();
+            return;
+        }
+
+        String pilihan = selectedItem.toString();
+        tnamaang.setText(namaAnggotaByPilihan.getOrDefault(pilihan, ""));
+
+        try (Connection connection = Koneksi.getConnection()) {
+            PinjamanInfo info = getPinjamanInfo(connection, idPinjaman);
+            BigDecimal sisa = info.jumlahPinjaman.subtract(info.totalDibayar);
+            jTextField5.setText("SISA PINJAMAN: " + formatRupiah(sisa));
+            tang.setText(String.valueOf(getAngsuranBerikutnya(connection, idPinjaman)));
+            tjmlang.setText(formatAngkaPlain(info.angsuranPerBulan));
+            loadRiwayatAngsuran(connection, idPinjaman);
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat detail pinjaman.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private Integer getIdPinjamanTerpilih() {
+        Object selectedItem = cbbnopinjaman.getSelectedItem();
+        if (selectedItem == null) {
+            return null;
+        }
+
+        return idPinjamanByPilihan.get(selectedItem.toString());
+    }
+
+    private PinjamanInfo getPinjamanInfo(Connection connection, int idPinjaman) throws SQLException {
+        String sql = """
+                SELECT p.id_anggota, p.jumlah_pinjaman, p.angsuran_per_bulan,
+                       COALESCE(SUM(a.jumlah_bayar), 0) AS total_dibayar
+                FROM pinjaman p
+                LEFT JOIN angsuran a ON a.id_pinjaman = p.id_pinjaman
+                WHERE p.id_pinjaman = ?
+                GROUP BY p.id_pinjaman, p.id_anggota, p.jumlah_pinjaman, p.angsuran_per_bulan
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idPinjaman);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return new PinjamanInfo(
+                            result.getInt("id_anggota"),
+                            result.getBigDecimal("jumlah_pinjaman"),
+                            result.getBigDecimal("angsuran_per_bulan"),
+                            result.getBigDecimal("total_dibayar")
+                    );
+                }
+            }
+        }
+
+        throw new SQLException("Data pinjaman tidak ditemukan.");
+    }
+
+    private int getAngsuranBerikutnya(Connection connection, int idPinjaman) throws SQLException {
+        String sql = "SELECT COALESCE(MAX(angsuran_ke), 0) + 1 AS berikutnya FROM angsuran WHERE id_pinjaman = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idPinjaman);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getInt("berikutnya");
+                }
+            }
+        }
+
+        return 1;
+    }
+
+    private int insertAngsuran(Connection connection, int idPinjaman, int angsuranKe,
+            Date tanggalBayar, BigDecimal jumlahBayar) throws SQLException {
+        String sql = """
+                INSERT INTO angsuran (
+                  id_pinjaman, angsuran_ke, tanggal_jatuh_tempo, tanggal_bayar,
+                  jumlah_bayar, status, keterangan
+                ) VALUES (?, ?, NULL, ?, ?, 'Dibayar', ?)
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, idPinjaman);
+            statement.setInt(2, angsuranKe);
+            statement.setDate(3, new java.sql.Date(tanggalBayar.getTime()));
+            statement.setBigDecimal(4, jumlahBayar);
+            statement.setString(5, tketang.getText().trim());
+            statement.executeUpdate();
+
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getInt(1);
+                }
+            }
+        }
+
+        throw new SQLException("ID angsuran gagal dibuat.");
+    }
+
+    private void insertTransaksiAngsuran(Connection connection, int idAnggota, int idAngsuran,
+            BigDecimal jumlahBayar) throws SQLException {
+        String sql = """
+                INSERT INTO transaksi (
+                  jenis_transaksi, id_anggota, referensi_tabel, referensi_id, debet, kredit, keterangan
+                ) VALUES ('Angsuran', ?, 'angsuran', ?, ?, 0, ?)
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idAnggota);
+            statement.setInt(2, idAngsuran);
+            statement.setBigDecimal(3, jumlahBayar);
+            statement.setString(4, tketang.getText().trim());
+            statement.executeUpdate();
+        }
+    }
+
+    private void updateStatusPinjaman(Connection connection, int idPinjaman, String status) throws SQLException {
+        String sql = "UPDATE pinjaman SET status = ? WHERE id_pinjaman = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, status);
+            statement.setInt(2, idPinjaman);
+            statement.executeUpdate();
+        }
+    }
+
+    private void loadRiwayatAngsuran(Connection connection, int idPinjaman) throws SQLException {
+        DefaultTableModel model = (DefaultTableModel) tabelangsuran.getModel();
+        model.setRowCount(0);
+
+        String sql = """
+                SELECT angsuran_ke, tanggal_bayar, jumlah_bayar, status, keterangan
+                FROM angsuran
+                WHERE id_pinjaman = ?
+                ORDER BY angsuran_ke ASC
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idPinjaman);
+
+            try (ResultSet result = statement.executeQuery()) {
+                int nomor = 1;
+                while (result.next()) {
+                    model.addRow(new Object[]{
+                        nomor++,
+                        result.getInt("angsuran_ke"),
+                        result.getDate("tanggal_bayar"),
+                        formatRupiah(result.getBigDecimal("jumlah_bayar")),
+                        result.getString("status")
+                    });
+                }
+            }
+        }
+    }
+
+    private void kosongkanTabelAngsuran() {
+        DefaultTableModel model = (DefaultTableModel) tabelangsuran.getModel();
+        model.setRowCount(0);
+    }
+
+    private BigDecimal parseNominal(String value) {
+        if (value == null || value.isBlank()) {
+            return BigDecimal.ZERO;
+        }
+
+        String cleaned = value
+                .replace("Rp", "")
+                .replace("rp", "")
+                .replace(".", "")
+                .replace(",", ".")
+                .trim();
+
+        try {
+            return new BigDecimal(cleaned);
+        } catch (NumberFormatException ex) {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    private int parseInteger(String value) {
+        if (value == null || value.isBlank()) {
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
+    }
+
+    private String formatRupiah(BigDecimal value) {
+        BigDecimal angka = value == null ? BigDecimal.ZERO : value;
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(angka);
+    }
+
+    private String formatAngkaPlain(BigDecimal value) {
+        BigDecimal angka = value == null ? BigDecimal.ZERO : value;
+        return angka.stripTrailingZeros().toPlainString();
+    }
+
+    private void resetFormAngsuran() {
+        cbbnopinjaman.setSelectedItem("");
+        tnamaang.setText("");
+        tang.setText("");
+        tglangs.setDate(new Date());
+        tjmlang.setText("");
+        tketang.setText("");
+        jTextField5.setText("SISA PINJAMAN");
+        kosongkanTabelAngsuran();
+        cbbnopinjaman.requestFocus();
+    }
+
+    private static class PinjamanInfo {
+        private final int idAnggota;
+        private final BigDecimal jumlahPinjaman;
+        private final BigDecimal angsuranPerBulan;
+        private final BigDecimal totalDibayar;
+
+        private PinjamanInfo(int idAnggota, BigDecimal jumlahPinjaman,
+                BigDecimal angsuranPerBulan, BigDecimal totalDibayar) {
+            this.idAnggota = idAnggota;
+            this.jumlahPinjaman = jumlahPinjaman == null ? BigDecimal.ZERO : jumlahPinjaman;
+            this.angsuranPerBulan = angsuranPerBulan == null ? BigDecimal.ZERO : angsuranPerBulan;
+            this.totalDibayar = totalDibayar == null ? BigDecimal.ZERO : totalDibayar;
+        }
+    }
 
     /**
      * @param args the command line arguments

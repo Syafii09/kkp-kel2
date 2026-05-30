@@ -244,7 +244,7 @@ public class Menu extends javax.swing.JFrame {
 
    panelContent.removeAll();
 
-    tampilan_baru panel = new tampilan_baru();
+    transaksi panel = new transaksi();
 
     panelContent.add(panel, java.awt.BorderLayout.CENTER);
 

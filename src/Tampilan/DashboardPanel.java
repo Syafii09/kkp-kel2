@@ -4,6 +4,31 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.awt.BorderLayout;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 /**
  *
  * @author BeniAkbar
@@ -15,81 +40,201 @@ public class DashboardPanel extends javax.swing.JPanel {
      */
     public DashboardPanel() {
         initComponents();
-        
-        panelGrafik.setPreferredSize(new java.awt.Dimension(450, 300));
-        panelGrafik.setMinimumSize(new java.awt.Dimension(450, 300));
-        panelGrafik.setLayout(new java.awt.BorderLayout());
-        panelGrafik.removeAll();
-        panelGrafik.add(new CustomBarChart(), java.awt.BorderLayout.CENTER);
-        panelGrafik.revalidate();
-        panelGrafik.repaint();
+        panelGrafik.setLayout(new BorderLayout());
+        loadRingkasanDashboard();
+        loadAktivitasTerbaru();
+        loadGrafikTransaksi();
     }
 
-    // Komponen grafik buatan sendiri agar tidak perlu repot install JFreeChart
-    class CustomBarChart extends javax.swing.JPanel {
-        private String[] labels = {"Jan", "Feb", "Mar", "Apr", "Mei", "Jun"};
-        private double[] values = {45, 65, 75, 95, 120, 150}; // Dalam juta
-        private double maxValue = 200;
-        
-        public CustomBarChart() {
-            setBackground(java.awt.Color.WHITE);
-        }
+    private void loadRingkasanDashboard() {
+        String sqlTotalAnggota = "SELECT COUNT(*) AS total FROM anggota";
+        String sqlKasMasukHariIni = """
+                SELECT COALESCE(SUM(debet), 0) AS total
+                FROM transaksi
+                WHERE DATE(tanggal) = CURDATE()
+                  AND jenis_transaksi IN ('Simpanan', 'Angsuran')
+                """;
+        String sqlTotalPinjaman = """
+                SELECT COALESCE(SUM(jumlah_pinjaman), 0) AS total
+                FROM pinjaman
+                WHERE status = 'Aktif'
+                """;
 
-        @Override
-        public java.awt.Dimension getPreferredSize() {
-            // Memberikan ukuran default agar grafik tidak gepeng
-            return new java.awt.Dimension(450, 300);
+        try (Connection connection = Koneksi.getConnection()) {
+            jLabel1.setText("<html><div style='text-align:center'>Total Anggota<br><b style='font-size:20px'>"
+                    + getSingleValue(connection, sqlTotalAnggota) + "</b></div></html>");
+            jLabel2.setText("<html><div style='text-align:center'>Kas Masuk Hari Ini<br><b style='font-size:16px'>"
+                    + formatRupiah(getSingleDecimal(connection, sqlKasMasukHariIni)) + "</b></div></html>");
+            jLabel3.setText("<html><div style='text-align:center'>Total Dana Pinjaman<br><b style='font-size:16px'>"
+                    + formatRupiah(getSingleDecimal(connection, sqlTotalPinjaman)) + "</b></div></html>");
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat ringkasan dashboard.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
+    }
 
-        @Override
-        protected void paintComponent(java.awt.Graphics g) {
-            super.paintComponent(g);
-            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
-            g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            int width = getWidth();
-            int height = getHeight();
-            
-            int padding = 40;
-            int labelPadding = 20;
-            
-            // Draw title
-            g2d.setColor(java.awt.Color.BLACK);
-            g2d.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
-            g2d.drawString("Grafik Simpanan (6 Bulan Terakhir)", padding, padding / 2 + 10);
-            
-            // Draw Y axis lines and labels
-            g2d.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
-            g2d.setColor(new java.awt.Color(220, 220, 220)); // Light Gray
-            for (int i = 0; i <= 4; i++) {
-                int y0 = height - padding - labelPadding - (i * (height - padding * 2 - labelPadding) / 4);
-                g2d.drawLine(padding, y0, width - padding, y0);
-                g2d.setColor(java.awt.Color.BLACK);
-                String yLabel = (i * 50) + (i == 0 ? "" : "M");
-                java.awt.FontMetrics metrics = g2d.getFontMetrics();
-                int labelWidth = metrics.stringWidth(yLabel);
-                g2d.drawString(yLabel, padding - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
-                g2d.setColor(new java.awt.Color(220, 220, 220));
-            }
-            
-            // Draw bars
-            int barWidth = (width - padding * 2) / labels.length / 2;
-            for (int i = 0; i < labels.length; i++) {
-                int x = padding + (i * (width - padding * 2) / labels.length) + barWidth / 2;
-                int barHeight = (int) ((values[i] / maxValue) * (height - padding * 2 - labelPadding));
-                int y = height - padding - labelPadding - barHeight;
-                
-                // Set color to blue just like the example
-                g2d.setColor(new java.awt.Color(20, 100, 200));
-                g2d.fillRect(x, y, barWidth, barHeight);
-                
-                // Draw X labels
-                g2d.setColor(java.awt.Color.BLACK);
-                java.awt.FontMetrics metrics = g2d.getFontMetrics();
-                int labelWidth = metrics.stringWidth(labels[i]);
-                g2d.drawString(labels[i], x + (barWidth - labelWidth) / 2, height - padding / 2);
+    private int getSingleValue(Connection connection, String sql) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                return result.getInt("total");
             }
         }
+
+        return 0;
+    }
+
+    private BigDecimal getSingleDecimal(Connection connection, String sql) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                BigDecimal value = result.getBigDecimal("total");
+                return value == null ? BigDecimal.ZERO : value;
+            }
+        }
+
+        return BigDecimal.ZERO;
+    }
+
+    private void loadAktivitasTerbaru() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        String sql = """
+                SELECT tanggal, jenis_transaksi, keterangan
+                FROM transaksi
+                ORDER BY id_transaksi DESC
+                LIMIT 6
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+
+            int nomor = 1;
+            while (result.next()) {
+                String aktivitas = result.getString("jenis_transaksi");
+                String keterangan = result.getString("keterangan");
+                if (keterangan != null && !keterangan.isBlank()) {
+                    aktivitas += " - " + keterangan;
+                }
+
+                model.addRow(new Object[]{
+                    nomor++,
+                    result.getTimestamp("tanggal"),
+                    aktivitas
+                });
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat aktivitas terbaru.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void loadGrafikTransaksi() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Locale localeIndonesia = new Locale("id", "ID");
+        DateTimeFormatter keyFormat = DateTimeFormatter.ofPattern("yyyy-MM");
+        DateTimeFormatter labelFormat = DateTimeFormatter.ofPattern("MMM yyyy", localeIndonesia);
+        Map<String, BigDecimal> totalPerBulan = new LinkedHashMap<>();
+
+        LocalDate bulanAwal = LocalDate.now().minusMonths(5).withDayOfMonth(1);
+        for (int i = 0; i < 6; i++) {
+            LocalDate bulan = bulanAwal.plusMonths(i);
+            totalPerBulan.put(bulan.format(keyFormat), BigDecimal.ZERO);
+        }
+
+        String sql = """
+                SELECT DATE_FORMAT(tanggal, '%Y-%m') AS bulan,
+                       SUM(debet) AS total
+                FROM transaksi
+                WHERE tanggal >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-01')
+                  AND jenis_transaksi = 'Simpanan'
+                GROUP BY DATE_FORMAT(tanggal, '%Y-%m')
+                ORDER BY DATE_FORMAT(tanggal, '%Y-%m') ASC
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                String bulan = result.getString("bulan");
+                if (totalPerBulan.containsKey(bulan)) {
+                    BigDecimal total = result.getBigDecimal("total");
+                    totalPerBulan.put(bulan, total == null ? BigDecimal.ZERO : total);
+                }
+            }
+
+            for (Map.Entry<String, BigDecimal> entry : totalPerBulan.entrySet()) {
+                LocalDate bulan = LocalDate.parse(entry.getKey() + "-01");
+                dataset.addValue(entry.getValue(), "Simpanan", bulan.format(labelFormat));
+            }
+
+            JFreeChart chart = ChartFactory.createBarChart(
+                    "Grafik Simpanan (6 Bulan Terakhir)",
+                    "Bulan",
+                    "Nominal",
+                    dataset,
+                    PlotOrientation.VERTICAL,
+                    false,
+                    true,
+                    false
+            );
+            aturTampilanChart(chart);
+
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setMouseWheelEnabled(true);
+
+            panelGrafik.removeAll();
+            panelGrafik.add(chartPanel, BorderLayout.CENTER);
+            panelGrafik.revalidate();
+            panelGrafik.repaint();
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat grafik transaksi.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aturTampilanChart(JFreeChart chart) {
+        chart.setBackgroundPaint(java.awt.Color.WHITE);
+        chart.getTitle().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(java.awt.Color.WHITE);
+        plot.setOutlineVisible(false);
+        plot.setRangeGridlinePaint(new java.awt.Color(220, 220, 220));
+        plot.setDomainGridlinesVisible(false);
+
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, new java.awt.Color(20, 100, 200));
+        renderer.setBarPainter(new StandardBarPainter());
+        renderer.setShadowVisible(false);
+        renderer.setDrawBarOutline(false);
+        renderer.setItemMargin(0.12);
+
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setNumberFormatOverride(NumberFormat.getCurrencyInstance(new Locale("id", "ID")));
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+    }
+
+    private String formatRupiah(BigDecimal value) {
+        BigDecimal angka = value == null ? BigDecimal.ZERO : value;
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(angka);
     }
 
     /**
@@ -254,12 +399,12 @@ public class DashboardPanel extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel5Layout.createSequentialGroup()
                     .addGap(49, 49, 49)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(60, Short.MAX_VALUE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(84, 84, 84)))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

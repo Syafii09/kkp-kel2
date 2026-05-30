@@ -4,17 +4,49 @@
  */
 package Tampilan;
 
+import Koneksi.Koneksi;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author julfi
  */
 public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
+    private final List<String> pilihanAnggota = new ArrayList<>();
+    private final Map<String, String> namaAnggotaByPilihan = new HashMap<>();
+    private boolean sedangFilterAnggota = false;
 
     /**
      * Creates new form MANAJEMEN_PINJAMAN
      */
     public MANAJEMEN_PINJAMAN() {
         initComponents();
+        tfNamaPinjaman.setEditable(false);
+        cbAnggotaPinjaman.setEditable(true);
+        muatComboAnggota();
+        aktifkanSearchComboAnggota();
+        aktifkanSearchPinjaman();
+        resetFormPinjaman();
+        loadDataPinjaman();
     }
 
     /**
@@ -48,6 +80,8 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
         tabelDaftarpinjaman = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         lblpinjamanaktif = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        TfSearch = new javax.swing.JTextField();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -72,7 +106,7 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
 
         jLabel6.setText("Tujuan");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setText("Input Pinjaman");
 
         cbAnggotaPinjaman.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -93,25 +127,39 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
 
         jPanel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setText("Daftar Pinjaman Anggota");
 
         tabelDaftarpinjaman.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "No", "Tanggal Pinjaman", "Jumlah", "Tenor", "Angsuran/Bln", "Status"
+                "No", "Nama", "Tanggal Pinjaman", "Jumlah", "Tenor", "Angsuran/Bln", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tabelDaftarpinjaman);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Total Pinjam Aktif :");
+
+        lblpinjamanaktif.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblpinjamanaktif.setForeground(new java.awt.Color(255, 0, 51));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel10.setText("Search :");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -121,29 +169,34 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel8))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblpinjamanaktif, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblpinjamanaktif, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TfSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel10)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(lblpinjamanaktif, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addGap(93, 93, 93))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -157,9 +210,6 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
                         .addComponent(btnSimpanPinjaman)
                         .addGap(18, 18, 18)
                         .addComponent(btnResetPinjaman))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel7))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -176,7 +226,8 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
                             .addComponent(tfJumlahPinjaman)
                             .addComponent(tfTenorPinjaman)
                             .addComponent(tfBungaPinjaman)
-                            .addComponent(tfStatusPinjaman))))
+                            .addComponent(tfStatusPinjaman)))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -185,8 +236,9 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(21, 21, 21)
+                        .addContainerGap()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(cbAnggotaPinjaman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -221,20 +273,415 @@ public class MANAJEMEN_PINJAMAN extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSimpanPinjamanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanPinjamanActionPerformed
-        // TODO add your handling code here:
+        simpanDataPinjaman();
     }//GEN-LAST:event_btnSimpanPinjamanActionPerformed
 
     private void btnResetPinjamanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetPinjamanActionPerformed
-        // TODO add your handling code here:
+        resetFormPinjaman();
     }//GEN-LAST:event_btnResetPinjamanActionPerformed
+
+    private void simpanDataPinjaman() {
+        String noAnggota = getNoAnggotaTerpilih();
+        BigDecimal jumlahPinjaman = parseNominal(tfJumlahPinjaman.getText());
+        int tenor = parseInteger(tfTenorPinjaman.getText());
+        BigDecimal bungaPersen = parseNominal(tfBungaPinjaman.getText());
+        String tujuan = tfStatusPinjaman.getText().trim();
+
+        if (noAnggota.isEmpty() || tfNamaPinjaman.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pilih No. Anggota terlebih dahulu.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (jumlahPinjaman.compareTo(BigDecimal.ZERO) <= 0) {
+            JOptionPane.showMessageDialog(this, "Jumlah pinjaman harus lebih dari 0.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (tenor <= 0) {
+            JOptionPane.showMessageDialog(this, "Tenor pinjaman harus lebih dari 0 bulan.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (bungaPersen.compareTo(BigDecimal.ZERO) < 0) {
+            JOptionPane.showMessageDialog(this, "Bunga tidak boleh kurang dari 0.", "Validasi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        BigDecimal totalBunga = jumlahPinjaman.multiply(bungaPersen).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+        BigDecimal totalPinjaman = jumlahPinjaman.add(totalBunga);
+        BigDecimal angsuranPerBulan = totalPinjaman.divide(new BigDecimal(tenor), 2, RoundingMode.HALF_UP);
+
+        try (Connection connection = Koneksi.getConnection()) {
+            connection.setAutoCommit(false);
+
+            try {
+                int idAnggota = getIdAnggota(connection, noAnggota);
+                String noPinjaman = buatNoPinjaman(connection);
+                int idPinjaman = insertPinjaman(connection, noPinjaman, idAnggota, jumlahPinjaman, tenor,
+                        bungaPersen, angsuranPerBulan, tujuan);
+                insertTransaksiPinjaman(connection, idAnggota, idPinjaman, jumlahPinjaman);
+
+                connection.commit();
+                JOptionPane.showMessageDialog(this, "Data pinjaman berhasil disimpan.\nAngsuran/Bulan: " + formatRupiah(angsuranPerBulan));
+                resetFormPinjaman();
+                loadDataPinjaman(TfSearch.getText().trim());
+            } catch (SQLException | RuntimeException ex) {
+                connection.rollback();
+                throw ex;
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal menyimpan data pinjaman.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void muatComboAnggota() {
+        pilihanAnggota.clear();
+        namaAnggotaByPilihan.clear();
+
+        String sql = """
+                SELECT no_anggota, nama
+                FROM anggota
+                WHERE status = 'Aktif'
+                ORDER BY id_anggota ASC
+                """;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                String noAnggota = result.getString("no_anggota");
+                String nama = result.getString("nama");
+                String pilihan = noAnggota + " - " + nama;
+
+                pilihanAnggota.add(pilihan);
+                namaAnggotaByPilihan.put(pilihan, nama);
+            }
+
+            isiModelComboAnggota(pilihanAnggota, "");
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data anggota.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aktifkanSearchComboAnggota() {
+        JTextField editor = (JTextField) cbAnggotaPinjaman.getEditor().getEditorComponent();
+
+        cbAnggotaPinjaman.addActionListener(e -> isiNamaAnggotaTerpilih());
+        editor.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterAnggota();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterAnggota();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filterAnggota();
+            }
+
+            private void filterAnggota() {
+                if (sedangFilterAnggota) {
+                    return;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    String keyword = editor.getText();
+                    List<String> hasil = new ArrayList<>();
+
+                    for (String pilihan : pilihanAnggota) {
+                        if (pilihan.toLowerCase().contains(keyword.toLowerCase())) {
+                            hasil.add(pilihan);
+                        }
+                    }
+
+                    isiModelComboAnggota(hasil, keyword);
+                    if (!keyword.isBlank()) {
+                        cbAnggotaPinjaman.showPopup();
+                    }
+                });
+            }
+        });
+    }
+
+    private void isiModelComboAnggota(List<String> data, String teksEditor) {
+        sedangFilterAnggota = true;
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        for (String item : data) {
+            model.addElement(item);
+        }
+
+        cbAnggotaPinjaman.setModel(model);
+        cbAnggotaPinjaman.setSelectedItem(teksEditor);
+
+        sedangFilterAnggota = false;
+    }
+
+    private void isiNamaAnggotaTerpilih() {
+        Object selectedItem = cbAnggotaPinjaman.getSelectedItem();
+        if (selectedItem == null) {
+            tfNamaPinjaman.setText("");
+            return;
+        }
+
+        String pilihan = selectedItem.toString();
+        tfNamaPinjaman.setText(namaAnggotaByPilihan.getOrDefault(pilihan, ""));
+    }
+
+    private String getNoAnggotaTerpilih() {
+        Object selectedItem = cbAnggotaPinjaman.getSelectedItem();
+        if (selectedItem == null) {
+            return "";
+        }
+
+        String pilihan = selectedItem.toString().trim();
+        int separatorIndex = pilihan.indexOf(" - ");
+        if (separatorIndex > -1) {
+            return pilihan.substring(0, separatorIndex).trim();
+        }
+
+        return pilihan;
+    }
+
+    private int getIdAnggota(Connection connection, String noAnggota) throws SQLException {
+        String sql = "SELECT id_anggota FROM anggota WHERE no_anggota = ? AND status = 'Aktif' LIMIT 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, noAnggota);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return result.getInt("id_anggota");
+                }
+            }
+        }
+
+        throw new SQLException("Anggota tidak ditemukan atau tidak aktif.");
+    }
+
+    private String buatNoPinjaman(Connection connection) throws SQLException {
+        String sql = "SELECT COALESCE(MAX(id_pinjaman), 0) + 1 AS nomor FROM pinjaman";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                return String.format("PJ%04d", result.getInt("nomor"));
+            }
+        }
+
+        return "PJ0001";
+    }
+
+    private int insertPinjaman(Connection connection, String noPinjaman, int idAnggota,
+            BigDecimal jumlahPinjaman, int tenor, BigDecimal bungaPersen,
+            BigDecimal angsuranPerBulan, String tujuan) throws SQLException {
+        String sql = """
+                INSERT INTO pinjaman (
+                  no_pinjaman, id_anggota, tanggal_pinjaman, jumlah_pinjaman,
+                  tenor_bulan, bunga_persen, angsuran_per_bulan, tujuan, status
+                ) VALUES (?, ?, CURDATE(), ?, ?, ?, ?, ?, 'Aktif')
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, noPinjaman);
+            statement.setInt(2, idAnggota);
+            statement.setBigDecimal(3, jumlahPinjaman);
+            statement.setInt(4, tenor);
+            statement.setBigDecimal(5, bungaPersen);
+            statement.setBigDecimal(6, angsuranPerBulan);
+            statement.setString(7, tujuan);
+            statement.executeUpdate();
+
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getInt(1);
+                }
+            }
+        }
+
+        throw new SQLException("ID pinjaman gagal dibuat.");
+    }
+
+    private void insertTransaksiPinjaman(Connection connection, int idAnggota, int idPinjaman,
+            BigDecimal jumlahPinjaman) throws SQLException {
+        String sql = """
+                INSERT INTO transaksi (
+                  jenis_transaksi, id_anggota, referensi_tabel, referensi_id, debet, kredit, keterangan
+                ) VALUES ('Pinjaman', ?, 'pinjaman', ?, 0, ?, ?)
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idAnggota);
+            statement.setInt(2, idPinjaman);
+            statement.setBigDecimal(3, jumlahPinjaman);
+            statement.setString(4, tfStatusPinjaman.getText().trim());
+            statement.executeUpdate();
+        }
+    }
+
+    private void loadDataPinjaman() {
+        loadDataPinjaman("");
+    }
+
+    private void loadDataPinjaman(String keyword) {
+        DefaultTableModel model = (DefaultTableModel) tabelDaftarpinjaman.getModel();
+        model.setRowCount(0);
+
+        String sql = """
+                SELECT p.no_pinjaman, a.no_anggota, a.nama, p.tanggal_pinjaman,
+                       p.jumlah_pinjaman, p.tenor_bulan, p.angsuran_per_bulan, p.status
+                FROM pinjaman p
+                JOIN anggota a ON a.id_anggota = p.id_anggota
+                WHERE ? = ''
+                   OR p.no_pinjaman LIKE ?
+                   OR a.no_anggota LIKE ?
+                   OR a.nama LIKE ?
+                   OR p.status LIKE ?
+                   OR CAST(p.tanggal_pinjaman AS CHAR) LIKE ?
+                ORDER BY p.id_pinjaman ASC
+                """;
+
+        BigDecimal totalAktif = BigDecimal.ZERO;
+
+        try (Connection connection = Koneksi.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            String search = keyword == null ? "" : keyword.trim();
+            String likeSearch = "%" + search + "%";
+            statement.setString(1, search);
+            statement.setString(2, likeSearch);
+            statement.setString(3, likeSearch);
+            statement.setString(4, likeSearch);
+            statement.setString(5, likeSearch);
+            statement.setString(6, likeSearch);
+
+            try (ResultSet result = statement.executeQuery()) {
+                int nomor = 1;
+                while (result.next()) {
+                    BigDecimal jumlah = result.getBigDecimal("jumlah_pinjaman");
+                    if ("Aktif".equalsIgnoreCase(result.getString("status"))) {
+                        totalAktif = totalAktif.add(jumlah);
+                    }
+
+                model.addRow(new Object[]{
+                    nomor++,
+                    result.getDate("tanggal_pinjaman"),
+                    formatRupiah(jumlah),
+                    result.getInt("tenor_bulan"),
+                        formatRupiah(result.getBigDecimal("angsuran_per_bulan")),
+                        result.getString("status")
+                    });
+                }
+            }
+
+            lblpinjamanaktif.setText(formatRupiah(totalAktif));
+        } catch (SQLException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal memuat data pinjaman.\n" + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void aktifkanSearchPinjaman() {
+        TfSearch.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                cariPinjaman();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                cariPinjaman();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                cariPinjaman();
+            }
+
+            private void cariPinjaman() {
+                loadDataPinjaman(TfSearch.getText().trim());
+            }
+        });
+    }
+
+    private BigDecimal parseNominal(String value) {
+        if (value == null || value.isBlank()) {
+            return BigDecimal.ZERO;
+        }
+
+        String cleaned = value
+                .replace("Rp", "")
+                .replace("rp", "")
+                .replace(".", "")
+                .replace(",", ".")
+                .trim();
+
+        try {
+            return new BigDecimal(cleaned);
+        } catch (NumberFormatException ex) {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    private int parseInteger(String value) {
+        if (value == null || value.isBlank()) {
+            return 0;
+        }
+
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
+    }
+
+    private String formatRupiah(BigDecimal value) {
+        BigDecimal angka = value == null ? BigDecimal.ZERO : value;
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        format.setMaximumFractionDigits(0);
+        return format.format(angka);
+    }
+
+    private void resetFormPinjaman() {
+        cbAnggotaPinjaman.setSelectedItem("");
+        tfNamaPinjaman.setText("");
+        tfJumlahPinjaman.setText("");
+        tfTenorPinjaman.setText("");
+        tfBungaPinjaman.setText("");
+        tfStatusPinjaman.setText("");
+        cbAnggotaPinjaman.requestFocus();
+    }
 
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField TfSearch;
     private javax.swing.JButton btnResetPinjaman;
     private javax.swing.JButton btnSimpanPinjaman;
     private javax.swing.JComboBox<String> cbAnggotaPinjaman;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
