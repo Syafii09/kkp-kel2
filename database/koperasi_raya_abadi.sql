@@ -53,7 +53,7 @@ CREATE TABLE `anggota` (
   `alamat` text DEFAULT NULL,
   `kota_kabupaten` varchar(100) DEFAULT NULL,
   `no_hp` varchar(20) DEFAULT NULL,
-  `pekerjaan` varchar(100) DEFAULT NULL,
+  `divisi` varchar(100) DEFAULT NULL,
   `tanggal_daftar` date NOT NULL,
   `status` enum('Calon','Aktif','Nonaktif') NOT NULL DEFAULT 'Aktif',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -64,7 +64,7 @@ CREATE TABLE `anggota` (
 -- Dumping data for table `anggota`
 --
 
-INSERT INTO `anggota` (`id_anggota`, `no_anggota`, `nik`, `nama`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `kota_kabupaten`, `no_hp`, `pekerjaan`, `tanggal_daftar`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `anggota` (`id_anggota`, `no_anggota`, `nik`, `nama`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `kota_kabupaten`, `no_hp`, `divisi`, `tanggal_daftar`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'A_001', NULL, 'sabilarrusdi', 'jakarta', '2004-06-24', 'Laki-laki', 'perumahan bukit waringin', 'Bogor', '05280788110', 'pengacara', '2026-05-24', 'Aktif', '2026-05-23 23:31:22', NULL),
 (2, 'A_002', NULL, 'fulan', 'depok', '2000-05-02', 'Laki-laki', 'cilodong depok', 'depok', '082283201093', 'fullstack developer', '2026-05-23', 'Aktif', '2026-05-23 23:48:00', NULL);
 
@@ -105,46 +105,8 @@ CREATE TABLE `groups` (
 
 INSERT INTO `groups` (`id_group`, `nama_group`, `deskripsi`, `created_at`) VALUES
 (1, 'Super Admin', 'Akses penuh ke seluruh menu', '2026-05-23 22:57:00'),
-(2, 'Pengguna', 'Akses operasional terbatas', '2026-05-23 22:57:00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hak_akses`
---
-
-CREATE TABLE `hak_akses` (
-  `id_hak_akses` int(11) NOT NULL,
-  `id_group` int(11) NOT NULL,
-  `nama_menu` varchar(50) NOT NULL,
-  `boleh_lihat` tinyint(1) NOT NULL DEFAULT 0,
-  `boleh_tambah` tinyint(1) NOT NULL DEFAULT 0,
-  `boleh_edit` tinyint(1) NOT NULL DEFAULT 0,
-  `boleh_hapus` tinyint(1) NOT NULL DEFAULT 0,
-  `boleh_cetak` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `hak_akses`
---
-
-INSERT INTO `hak_akses` (`id_hak_akses`, `id_group`, `nama_menu`, `boleh_lihat`, `boleh_tambah`, `boleh_edit`, `boleh_hapus`, `boleh_cetak`) VALUES
-(1, 1, 'Dashboard', 1, 1, 1, 1, 1),
-(2, 1, 'Manajemen Anggota', 1, 1, 1, 1, 1),
-(3, 1, 'Manajemen Pinjaman', 1, 1, 1, 1, 1),
-(4, 1, 'Manajemen Simpanan', 1, 1, 1, 1, 1),
-(5, 1, 'Angsuran', 1, 1, 1, 1, 1),
-(6, 1, 'Transaksi', 1, 1, 1, 1, 1),
-(7, 1, 'Laporan', 1, 1, 1, 1, 1),
-(8, 1, 'Pengaturan', 1, 1, 1, 1, 1),
-(9, 2, 'Dashboard', 1, 0, 0, 0, 0),
-(10, 2, 'Manajemen Anggota', 1, 1, 1, 0, 1),
-(11, 2, 'Manajemen Pinjaman', 1, 1, 1, 0, 1),
-(12, 2, 'Manajemen Simpanan', 1, 1, 1, 0, 1),
-(13, 2, 'Angsuran', 1, 1, 1, 0, 1),
-(14, 2, 'Transaksi', 1, 0, 0, 0, 1),
-(15, 2, 'Laporan', 1, 0, 0, 0, 1),
-(16, 2, 'Pengaturan', 0, 0, 0, 0, 0);
+(2, 'Pengguna', 'Akses operasional terbatas', '2026-05-23 22:57:00'),
+(3, 'Admin', 'Akses administrasi dan pengelolaan data', '2026-06-03 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -181,6 +143,7 @@ CREATE TABLE `pengaturan_koperasi` (
   `email` varchar(100) DEFAULT NULL,
   `mata_uang` varchar(30) NOT NULL DEFAULT 'Rupiah(Rp)',
   `persen_bunga` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `simpanan_wajib` decimal(15,2) NOT NULL DEFAULT 0.00,
   `tahun_buku` year(4) NOT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -189,8 +152,8 @@ CREATE TABLE `pengaturan_koperasi` (
 -- Dumping data for table `pengaturan_koperasi`
 --
 
-INSERT INTO `pengaturan_koperasi` (`id_pengaturan`, `nama_koperasi`, `alamat`, `no_telepon`, `email`, `mata_uang`, `persen_bunga`, `tahun_buku`, `updated_at`) VALUES
-(1, 'Koperasi Raya Abadi Saudara', NULL, NULL, NULL, 'Rupiah(Rp)', 0.00, '2026', NULL);
+INSERT INTO `pengaturan_koperasi` (`id_pengaturan`, `nama_koperasi`, `alamat`, `no_telepon`, `email`, `mata_uang`, `persen_bunga`, `simpanan_wajib`, `tahun_buku`, `updated_at`) VALUES
+(1, 'Koperasi Raya Abadi Saudara', NULL, NULL, NULL, 'Rupiah(Rp)', 0.00, 0.00, '2026', NULL);
 
 -- --------------------------------------------------------
 
@@ -241,6 +204,7 @@ CREATE TABLE `transaksi` (
   `tanggal` datetime NOT NULL DEFAULT current_timestamp(),
   `jenis_transaksi` enum('Simpanan','Pinjaman','Angsuran','Lainnya') NOT NULL,
   `id_anggota` int(11) DEFAULT NULL,
+  `id_user` int(11) DEFAULT NULL,
   `referensi_tabel` varchar(50) DEFAULT NULL,
   `referensi_id` int(11) DEFAULT NULL,
   `debet` decimal(15,2) NOT NULL DEFAULT 0.00,
@@ -258,6 +222,7 @@ CREATE TABLE `transaksi` (
 CREATE TABLE `users` (
   `id_user` int(11) NOT NULL,
   `id_group` int(11) NOT NULL,
+  `id_anggota` int(11) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
@@ -270,9 +235,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id_user`, `id_group`, `nama`, `email`, `password_hash`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'admin', 'admin@klp2.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Aktif', '2026-05-23 22:57:00', NULL),
-(2, 2, 'user', 'user@example.com', '04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb', 'Aktif', '2026-05-24 03:01:32', NULL);
+INSERT INTO `users` (`id_user`, `id_group`, `id_anggota`, `nama`, `email`, `password_hash`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, 'admin', 'admin@klp2.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Aktif', '2026-05-23 22:57:00', NULL),
+(2, 2, NULL, 'user', 'user@example.com', '04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb', 'Aktif', '2026-05-24 03:01:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -376,13 +341,6 @@ ALTER TABLE `groups`
   ADD UNIQUE KEY `nama_group` (`nama_group`);
 
 --
--- Indexes for table `hak_akses`
---
-ALTER TABLE `hak_akses`
-  ADD PRIMARY KEY (`id_hak_akses`),
-  ADD UNIQUE KEY `uq_hak_akses_group_menu` (`id_group`,`nama_menu`);
-
---
 -- Indexes for table `jenis_simpanan`
 --
 ALTER TABLE `jenis_simpanan`
@@ -416,7 +374,8 @@ ALTER TABLE `simpanan`
 --
 ALTER TABLE `transaksi`
   ADD PRIMARY KEY (`id_transaksi`),
-  ADD KEY `fk_transaksi_anggota` (`id_anggota`);
+  ADD KEY `fk_transaksi_anggota` (`id_anggota`),
+  ADD KEY `fk_transaksi_user` (`id_user`);
 
 --
 -- Indexes for table `users`
@@ -424,7 +383,8 @@ ALTER TABLE `transaksi`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `fk_users_group` (`id_group`);
+  ADD KEY `fk_users_group` (`id_group`),
+  ADD KEY `fk_users_anggota` (`id_anggota`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -452,13 +412,7 @@ ALTER TABLE `angsuran`
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id_group` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `hak_akses`
---
-ALTER TABLE `hak_akses`
-  MODIFY `id_hak_akses` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_group` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `jenis_simpanan`
@@ -513,12 +467,6 @@ ALTER TABLE `angsuran`
   ADD CONSTRAINT `fk_angsuran_pinjaman` FOREIGN KEY (`id_pinjaman`) REFERENCES `pinjaman` (`id_pinjaman`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `hak_akses`
---
-ALTER TABLE `hak_akses`
-  ADD CONSTRAINT `fk_hak_akses_group` FOREIGN KEY (`id_group`) REFERENCES `groups` (`id_group`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `pinjaman`
 --
 ALTER TABLE `pinjaman`
@@ -535,12 +483,14 @@ ALTER TABLE `simpanan`
 -- Constraints for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  ADD CONSTRAINT `fk_transaksi_anggota` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_transaksi_anggota` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_transaksi_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
+  ADD CONSTRAINT `fk_users_anggota` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_users_group` FOREIGN KEY (`id_group`) REFERENCES `groups` (`id_group`) ON UPDATE CASCADE;
 COMMIT;
 

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportSHU" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a90b1d4-21f6-4c42-9e54-a7d3bb5c65a9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TANGGAL_AWAL" class="java.sql.Date"/>
+	<parameter name="TANGGAL_AKHIR" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+    1 AS urut,
+    'Pendapatan Angsuran' AS komponen,
+    COALESCE(SUM(t.debet), 0) AS nominal
+FROM transaksi t
+WHERE t.jenis_transaksi = 'Angsuran'
+  AND ($P{TANGGAL_AWAL} IS NULL OR DATE(t.tanggal) >= $P{TANGGAL_AWAL})
+  AND ($P{TANGGAL_AKHIR} IS NULL OR DATE(t.tanggal) <= $P{TANGGAL_AKHIR})
+
+UNION ALL
+
+SELECT
+    2 AS urut,
+    'Dana Pinjaman Keluar' AS komponen,
+    COALESCE(SUM(t.kredit), 0) AS nominal
+FROM transaksi t
+WHERE t.jenis_transaksi = 'Pinjaman'
+  AND ($P{TANGGAL_AWAL} IS NULL OR DATE(t.tanggal) >= $P{TANGGAL_AWAL})
+  AND ($P{TANGGAL_AKHIR} IS NULL OR DATE(t.tanggal) <= $P{TANGGAL_AKHIR})
+
+UNION ALL
+
+SELECT
+    3 AS urut,
+    'Estimasi SHU' AS komponen,
+    COALESCE(SUM(t.debet), 0) - COALESCE(SUM(t.kredit), 0) AS nominal
+FROM transaksi t
+WHERE ($P{TANGGAL_AWAL} IS NULL OR DATE(t.tanggal) >= $P{TANGGAL_AWAL})
+  AND ($P{TANGGAL_AKHIR} IS NULL OR DATE(t.tanggal) <= $P{TANGGAL_AKHIR})
+
+ORDER BY urut;]]>
+	</queryString>
+	<field name="urut" class="java.lang.Integer"/>
+	<field name="komponen" class="java.lang.String"/>
+	<field name="nominal" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="88" height="79" uuid="2a2a5bb2-5b3f-460d-b630-4d498612d1e5"/>
+				<imageExpression><![CDATA["C:\\Users\\sabil\\Documents\\Tugas_Visual\\kkp-kel2\\src\\resources\\images\\Logo_Image.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="88" y="2" width="467" height="29" uuid="ccbe1851-1cf9-45f1-8c37-560e21570d27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Copperplate Gothic Bold" size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Koperasi Raya Abadi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="31" width="467" height="24" uuid="d25166db-28a4-45b8-b928-6b92fcf14e52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Copperplate Gothic Bold" size="12"/>
+				</textElement>
+				<text><![CDATA[JALAN RAYA BOGOR NO. 1 JAKARTA TIMUR 13760]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="55" width="467" height="24" uuid="09e152b6-a033-4013-a5ce-b08b4e4acdd2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Copperplate Gothic Bold" size="12"/>
+				</textElement>
+				<text><![CDATA[NO. TELP : 0811122222 FAX : 1234567890]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="78" width="555" height="1" uuid="3470b269-69b7-4788-8c29-785cfc20fcfa"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="35" uuid="e8c15161-2eee-445b-993a-130806ed7d34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN SISA HASIL USAHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="35" width="74" height="20" uuid="45289414-d9fd-4530-9e37-98a9bbfdd6f6"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Dicetak Pada :]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="460" y="35" width="95" height="20" uuid="d1b9a06d-36b9-4554-88c2-ed575355ce7c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="380" height="24" backcolor="#003366" uuid="43fa8052-b440-42fa-8c02-2a6bce8c8679"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="380" y="0" width="175" height="24" backcolor="#003366" uuid="6f83467e-87f0-4429-a6f1-474b68f03b64"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="380" height="24" forecolor="#FFFFFF" uuid="a3427b6f-ea2e-4e22-9fb5-2e5fa034ff7d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Komponen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="0" width="175" height="24" forecolor="#FFFFFF" uuid="d3572d8e-4523-481f-8382-c3967e390972"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nominal]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="380" height="24" uuid="e8f3d123-75fe-4fc4-974f-e510fc7e8f6b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="380" y="0" width="175" height="24" uuid="ec91a9bf-1fea-48e5-9fb9-0cc9d74389a0"/>
+			</rectangle>
+			<textField>
+				<reportElement x="8" y="0" width="372" height="24" uuid="fb267f97-9ddf-4b06-89a2-3ba743f94c95"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{komponen}]]></textFieldExpression>
+			</textField>
+			<textField pattern="Rp, #,##0">
+				<reportElement x="388" y="0" width="167" height="24" uuid="10b59d2e-61bb-4f8d-aec5-2f7d6169a893"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nominal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="165" splitType="Stretch">
+			<textField>
+				<reportElement x="245" y="145" width="100" height="20" uuid="f4c053b7-f33d-445b-9919-fdd75b7d0525"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["Halaman " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="403" y="145" width="152" height="20" uuid="ab44b3a5-6467-41df-b22b-b59769252727"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Penanggung Jawab]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="403" y="125" width="152" height="20" uuid="14cfc89c-f0dc-450e-88c3-fc5ffb0b45b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[( 		)]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="440" y="46" width="115" height="20" uuid="7e24e6be-053d-4dae-bb5a-f89b488cc495"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="403" y="46" width="37" height="20" uuid="10e59e96-d49a-4b43-915b-0226091bd803"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Jakarta, ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

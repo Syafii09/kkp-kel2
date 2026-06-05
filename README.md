@@ -127,4 +127,10 @@ git push
 
 ---
 
+## run apache & mysql
+- net start Apache2.4    
+- net start mysql  
+- net stop mysql
+- net stop Apache2.4
+
 > Dibuat untuk keperluan KKP (Kuliah Kerja Praktik) — 2026
