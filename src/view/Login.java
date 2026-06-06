@@ -207,7 +207,6 @@ public class Login extends javax.swing.JFrame {
 
         btcreateaccount.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btcreateaccount.setText("Create Account");
-        btcreateaccount.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btcreateaccount.addActionListener(this::btcreateaccountActionPerformed);
 
         pfconfirmpw.addActionListener(this::pfconfirmpwActionPerformed);
@@ -219,17 +218,16 @@ public class Login extends javax.swing.JFrame {
             .addGroup(psignupLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(psignupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfnama, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(psignupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(psignupLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, psignupLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btcreateaccount))
+                    .addGroup(psignupLayout.createSequentialGroup()
+                        .addGroup(psignupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pfconfirmpw, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, psignupLayout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btcreateaccount, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(tfemail, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pfpw, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(tfnama, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfemail, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pfpw, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(7, Short.MAX_VALUE))))
         );
         psignupLayout.setVerticalGroup(
             psignupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

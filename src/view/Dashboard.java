@@ -310,6 +310,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         Transaksi = new javax.swing.JTabbedPane();
+        jpdashboard = new javax.swing.JPanel();
         jpManggota = new javax.swing.JPanel();
         jpMsimpanan = new javax.swing.JPanel();
         jpMpinjaman = new javax.swing.JPanel();
@@ -317,7 +318,6 @@ public class Dashboard extends javax.swing.JFrame {
         jptransaksi = new javax.swing.JPanel();
         jplaporan = new javax.swing.JPanel();
         jppengaturan = new javax.swing.JPanel();
-        jpdashboard = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         Lcr = new javax.swing.JLabel();
         LTos = new javax.swing.JLabel();
@@ -335,6 +335,21 @@ public class Dashboard extends javax.swing.JFrame {
 
         Transaksi.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         Transaksi.setOpaque(true);
+
+        jpdashboard.setOpaque(false);
+
+        javax.swing.GroupLayout jpdashboardLayout = new javax.swing.GroupLayout(jpdashboard);
+        jpdashboard.setLayout(jpdashboardLayout);
+        jpdashboardLayout.setHorizontalGroup(
+            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1062, Short.MAX_VALUE)
+        );
+        jpdashboardLayout.setVerticalGroup(
+            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 606, Short.MAX_VALUE)
+        );
+
+        Transaksi.addTab("Dashboard", jpdashboard);
 
         jpManggota.setDoubleBuffered(false);
         jpManggota.setOpaque(false);
@@ -442,21 +457,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         Transaksi.addTab("Pengaturan", jppengaturan);
 
-        jpdashboard.setOpaque(false);
-
-        javax.swing.GroupLayout jpdashboardLayout = new javax.swing.GroupLayout(jpdashboard);
-        jpdashboard.setLayout(jpdashboardLayout);
-        jpdashboardLayout.setHorizontalGroup(
-            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
-        );
-        jpdashboardLayout.setVerticalGroup(
-            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 606, Short.MAX_VALUE)
-        );
-
-        Transaksi.addTab("Dashboard", jpdashboard);
-
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setOpaque(false);
 
@@ -479,14 +479,14 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Lcr)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(LPrivacypolicy)
+                .addComponent(Lcr, javax.swing.GroupLayout.PREFERRED_SIZE, 984, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LPrivacypolicy, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LTos)
-                .addContainerGap())
+                .addComponent(LTos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
