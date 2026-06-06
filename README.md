@@ -1,5 +1,5 @@
 # 🏦 Sistem Koperasi Simpan Pinjam
-### KKP Kelompok 2
+### Pemrograman Visual kelompok 2
 
 Aplikasi desktop berbasis Java Swing untuk manajemen koperasi simpan pinjam **Koperasi Raya Abadi Saudara**, mencakup pengelolaan anggota, simpanan, pinjaman, angsuran, transaksi, dashboard, laporan keuangan, pengaturan sistem, serta hak akses pengguna.
 
