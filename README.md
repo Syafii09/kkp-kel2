@@ -38,7 +38,9 @@ Aplikasi desktop berbasis Java Swing untuk manajemen koperasi simpan pinjam **Ko
 
 ## 🛠️ Teknologi
 
-- **Bahasa:** Java
+- **Bahasa Utama:** Java
+- **Markup/Template:** HTML, XML/JRXML
+- **Database Query:** SQL
 - **GUI:** Java Swing dengan NetBeans GUI Builder
 - **Database:** MySQL / MariaDB
 - **IDE:** Apache NetBeans 25
