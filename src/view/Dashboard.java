@@ -38,9 +38,28 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         getRootPane().putClientProperty("JRootPane.menuBarEmbedded", Boolean.FALSE);
         setTitle("Koperasi Raya Abadi Saudara");
+        setupFooterLinks();
         setupMenuBar();
         setupTabbedPages();
         setLocationRelativeTo(null);
+    }
+
+    private void setupFooterLinks() {
+        LPrivacypolicy.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        LPrivacypolicy.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tampilkanPrivacyPolicy();
+            }
+        });
+
+        LTos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        LTos.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tampilkanTermsOfService();
+            }
+        });
     }
 
     private void setupMenuBar() {
@@ -187,6 +206,71 @@ public class Dashboard extends javax.swing.JFrame {
         );
     }
 
+    private void tampilkanPrivacyPolicy() {
+        JOptionPane.showMessageDialog(
+                this,
+                "<html><body style='width:420px'>"
+                + "<h2 style='margin:0;text-align:center'>Privacy Policy</h2>"
+                + "<h3 style='margin:6px 0 12px;text-align:center'>Koperasi Raya Abadi Saudara</h3>"
+                + "<p>Koperasi Raya Abadi Saudara is committed to protecting the privacy and confidentiality "
+                + "of its members and application users. This Privacy Policy explains how personal and financial "
+                + "data is collected, used, stored, and protected within the cooperative management system.</p>"
+                + "<h4 style='margin-bottom:4px'>1. Information We Collect</h4>"
+                + "<p>The application may collect member identity data, account information, and cooperative "
+                + "transaction data, including savings, loans, installments, and financial records.</p>"
+                + "<h4 style='margin-bottom:4px'>2. Use of Information</h4>"
+                + "<p>Collected data is used to manage membership, record cooperative transactions, generate "
+                + "reports, manage user access, and support internal cooperative operations.</p>"
+                + "<h4 style='margin-bottom:4px'>3. Data Access</h4>"
+                + "<p>Access to data is limited based on user roles and permissions. Users may only access "
+                + "information according to their authorized responsibilities.</p>"
+                + "<h4 style='margin-bottom:4px'>4. Data Storage and Security</h4>"
+                + "<p>Data is stored in the application database. The system applies role-based access control, "
+                + "and users are responsible for maintaining the confidentiality of their login credentials.</p>"
+                + "<h4 style='margin-bottom:4px'>5. Data Disclosure</h4>"
+                + "<p>Personal and financial data will not be shared with external parties unless required by law, "
+                + "official cooperative needs, or with the consent of the related member.</p>"
+                + "<h4 style='margin-bottom:4px'>6. Policy Updates</h4>"
+                + "<p>This Privacy Policy may be updated to reflect system improvements, operational needs, "
+                + "or regulatory requirements.</p>"
+                + "</body></html>",
+                "Privacy Policy",
+                JOptionPane.PLAIN_MESSAGE
+        );
+    }
+
+    private void tampilkanTermsOfService() {
+        JOptionPane.showMessageDialog(
+                this,
+                "<html><body style='width:420px'>"
+                + "<h2 style='margin:0;text-align:center'>Terms of Service</h2>"
+                + "<h3 style='margin:6px 0 12px;text-align:center'>Koperasi Raya Abadi Saudara</h3>"
+                + "<p>These Terms of Service define the rules and responsibilities for using the cooperative "
+                + "management application of Koperasi Raya Abadi Saudara.</p>"
+                + "<h4 style='margin-bottom:4px'>1. Authorized Use</h4>"
+                + "<p>The application may only be used by authorized users according to their assigned roles "
+                + "and responsibilities within the cooperative.</p>"
+                + "<h4 style='margin-bottom:4px'>2. Account Responsibility</h4>"
+                + "<p>Users are responsible for maintaining the confidentiality of their login credentials and "
+                + "for all activities performed through their account.</p>"
+                + "<h4 style='margin-bottom:4px'>3. Data Accuracy</h4>"
+                + "<p>Users must ensure that all data entered into the system is accurate, valid, and related "
+                + "to official cooperative activities.</p>"
+                + "<h4 style='margin-bottom:4px'>4. Restricted Actions</h4>"
+                + "<p>Users must not misuse the system, access unauthorized data, modify records without proper "
+                + "permission, or perform actions that may disrupt application operations.</p>"
+                + "<h4 style='margin-bottom:4px'>5. System Changes</h4>"
+                + "<p>The cooperative may update application features, access rules, and operational procedures "
+                + "as needed to support system improvements.</p>"
+                + "<h4 style='margin-bottom:4px'>6. Acceptance</h4>"
+                + "<p>By using this application, users agree to comply with these Terms of Service and the "
+                + "applicable cooperative policies.</p>"
+                + "</body></html>",
+                "Terms of Service",
+                JOptionPane.PLAIN_MESSAGE
+        );
+    }
+
     private void tampilkanProfile() {
         JOptionPane.showMessageDialog(
                 this,
@@ -226,7 +310,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         jPanel2 = new javax.swing.JPanel();
         Transaksi = new javax.swing.JTabbedPane();
-        jpdashboard = new javax.swing.JPanel();
         jpManggota = new javax.swing.JPanel();
         jpMsimpanan = new javax.swing.JPanel();
         jpMpinjaman = new javax.swing.JPanel();
@@ -234,6 +317,12 @@ public class Dashboard extends javax.swing.JFrame {
         jptransaksi = new javax.swing.JPanel();
         jplaporan = new javax.swing.JPanel();
         jppengaturan = new javax.swing.JPanel();
+        jpdashboard = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        Lcr = new javax.swing.JLabel();
+        LTos = new javax.swing.JLabel();
+        LPrivacypolicy = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
         jSeparator1 = new javax.swing.JSeparator();
         jMenuBar2 = new javax.swing.JMenuBar();
         jmhelp = new javax.swing.JMenu();
@@ -247,21 +336,6 @@ public class Dashboard extends javax.swing.JFrame {
         Transaksi.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         Transaksi.setOpaque(true);
 
-        jpdashboard.setOpaque(false);
-
-        javax.swing.GroupLayout jpdashboardLayout = new javax.swing.GroupLayout(jpdashboard);
-        jpdashboard.setLayout(jpdashboardLayout);
-        jpdashboardLayout.setHorizontalGroup(
-            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jpdashboardLayout.setVerticalGroup(
-            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        Transaksi.addTab("Dashboard", jpdashboard);
-
         jpManggota.setDoubleBuffered(false);
         jpManggota.setOpaque(false);
 
@@ -269,11 +343,11 @@ public class Dashboard extends javax.swing.JFrame {
         jpManggota.setLayout(jpManggotaLayout);
         jpManggotaLayout.setHorizontalGroup(
             jpManggotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jpManggotaLayout.setVerticalGroup(
             jpManggotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Manajemen Anggota", jpManggota);
@@ -284,11 +358,11 @@ public class Dashboard extends javax.swing.JFrame {
         jpMsimpanan.setLayout(jpMsimpananLayout);
         jpMsimpananLayout.setHorizontalGroup(
             jpMsimpananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jpMsimpananLayout.setVerticalGroup(
             jpMsimpananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Manajemen Simpanan", jpMsimpanan);
@@ -299,11 +373,11 @@ public class Dashboard extends javax.swing.JFrame {
         jpMpinjaman.setLayout(jpMpinjamanLayout);
         jpMpinjamanLayout.setHorizontalGroup(
             jpMpinjamanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jpMpinjamanLayout.setVerticalGroup(
             jpMpinjamanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Manajemen Pinjaman", jpMpinjaman);
@@ -314,11 +388,11 @@ public class Dashboard extends javax.swing.JFrame {
         jpangsuran.setLayout(jpangsuranLayout);
         jpangsuranLayout.setHorizontalGroup(
             jpangsuranLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jpangsuranLayout.setVerticalGroup(
             jpangsuranLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Angsuran", jpangsuran);
@@ -329,11 +403,11 @@ public class Dashboard extends javax.swing.JFrame {
         jptransaksi.setLayout(jptransaksiLayout);
         jptransaksiLayout.setHorizontalGroup(
             jptransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jptransaksiLayout.setVerticalGroup(
             jptransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Transaksi", jptransaksi);
@@ -344,11 +418,11 @@ public class Dashboard extends javax.swing.JFrame {
         jplaporan.setLayout(jplaporanLayout);
         jplaporanLayout.setHorizontalGroup(
             jplaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jplaporanLayout.setVerticalGroup(
             jplaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Laporan", jplaporan);
@@ -359,24 +433,87 @@ public class Dashboard extends javax.swing.JFrame {
         jppengaturan.setLayout(jppengaturanLayout);
         jppengaturanLayout.setHorizontalGroup(
             jppengaturanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1001, Short.MAX_VALUE)
+            .addGap(0, 1062, Short.MAX_VALUE)
         );
         jppengaturanLayout.setVerticalGroup(
             jppengaturanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 574, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         Transaksi.addTab("Pengaturan", jppengaturan);
+
+        jpdashboard.setOpaque(false);
+
+        javax.swing.GroupLayout jpdashboardLayout = new javax.swing.GroupLayout(jpdashboard);
+        jpdashboard.setLayout(jpdashboardLayout);
+        jpdashboardLayout.setHorizontalGroup(
+            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1062, Short.MAX_VALUE)
+        );
+        jpdashboardLayout.setVerticalGroup(
+            jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 606, Short.MAX_VALUE)
+        );
+
+        Transaksi.addTab("Dashboard", jpdashboard);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setOpaque(false);
+
+        Lcr.setForeground(java.awt.SystemColor.textInactiveText);
+        Lcr.setText("© 2026 Kelompok 2 Pemograman Visual. All Right Reserved");
+
+        LTos.setForeground(java.awt.SystemColor.textInactiveText);
+        LTos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LTos.setText("Term Of Service");
+
+        LPrivacypolicy.setForeground(java.awt.SystemColor.textInactiveText);
+        LPrivacypolicy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LPrivacypolicy.setText("Privacy Policy");
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Lcr)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(LPrivacypolicy)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LTos)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Lcr)
+                        .addComponent(LTos)
+                        .addComponent(LPrivacypolicy)))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(Transaksi)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Transaksi)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(Transaksi)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         jMenuBar2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -432,10 +569,15 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LPrivacypolicy;
+    private javax.swing.JLabel LTos;
+    private javax.swing.JLabel Lcr;
     private javax.swing.JTabbedPane Transaksi;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JMenu jmhelp;
     private javax.swing.JMenu jmusermenu;
     private javax.swing.JMenu jmview;

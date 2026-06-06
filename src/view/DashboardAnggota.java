@@ -6,6 +6,7 @@ package view;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import dao.AnggotaDAO;
 import dao.DashboardAnggotaDAO;
 import java.awt.Image;
 import java.awt.Window;
@@ -29,6 +30,7 @@ import utils.SesiLogin;
  */
 public class DashboardAnggota extends javax.swing.JFrame {
     private final DashboardAnggotaDAO dashboardAnggotaDAO = new DashboardAnggotaDAO();
+    private final AnggotaDAO anggotaDAO = new AnggotaDAO();
     private final Integer idAnggota;
     private final String namaUserLogin;
     private final Locale indonesia = new Locale("id", "ID");
@@ -45,9 +47,39 @@ public class DashboardAnggota extends javax.swing.JFrame {
         this.namaUserLogin = namaUserLogin == null || namaUserLogin.isBlank() ? "Anggota" : namaUserLogin;
         initComponents();
         getRootPane().putClientProperty("JRootPane.menuBarEmbedded", Boolean.FALSE);
+        setupWindowClose();
+        setupFooterLinks();
         setLocationRelativeTo(null);
         setupMenuAnggota();
         loadDashboardAnggota();
+    }
+
+    private void setupWindowClose() {
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                keluarAplikasiDenganPilihanSimpanLogin();
+            }
+        });
+    }
+
+    private void setupFooterLinks() {
+        LPrivacypolicy12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        LPrivacypolicy12.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tampilkanPrivacyPolicy();
+            }
+        });
+
+        LTos12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        LTos12.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tampilkanTermsOfService();
+            }
+        });
     }
 
     private void setupMenuAnggota() {
@@ -82,7 +114,7 @@ public class DashboardAnggota extends javax.swing.JFrame {
         jmusermenu.setText(namaUserLogin);
         jmusermenu.setIcon(iconUserMenu());
         jmusermenu.removeAll();
-        JMenuItem lengkapiDataItem = new JMenuItem("Lengkapi Data Diri");
+        JMenuItem lengkapiDataItem = new JMenuItem(teksMenuDataDiri());
         JMenuItem profileItem = new JMenuItem("Profile");
         JMenuItem logoutItem = new JMenuItem("Logout / Keluar");
         lengkapiDataItem.addActionListener(e -> bukaFormLengkapiDataDiri());
@@ -102,6 +134,35 @@ public class DashboardAnggota extends javax.swing.JFrame {
         setJMenuBar(jMenuBar);
         jMenuBar.revalidate();
         jMenuBar.repaint();
+    }
+
+    private String teksMenuDataDiri() {
+        return dataDiriSudahLengkap() ? "Edit Data Diri" : "Lengkapi Data Diri";
+    }
+
+    private boolean dataDiriSudahLengkap() {
+        if (idAnggota == null) {
+            return false;
+        }
+
+        try {
+            AnggotaDAO.AnggotaData data = anggotaDAO.getById(idAnggota);
+            return data != null
+                    && !kosong(data.nama())
+                    && !kosong(data.nik())
+                    && !kosong(data.tempatLahir())
+                    && data.tanggalLahir() != null
+                    && !kosong(data.jenisKelamin())
+                    && !kosong(data.alamat())
+                    && !kosong(data.noHp())
+                    && !kosong(data.divisi());
+        } catch (SQLException | RuntimeException ex) {
+            return false;
+        }
+    }
+
+    private boolean kosong(String value) {
+        return value == null || value.isBlank();
     }
 
     private javax.swing.Icon iconUserMenu() {
@@ -184,6 +245,71 @@ public class DashboardAnggota extends javax.swing.JFrame {
                 + "<h3 style='margin:0'>2026</h3>"
                 + "</div></body></html>",
                 "About",
+                JOptionPane.PLAIN_MESSAGE
+        );
+    }
+
+    private void tampilkanPrivacyPolicy() {
+        JOptionPane.showMessageDialog(
+                this,
+                "<html><body style='width:420px'>"
+                + "<h2 style='margin:0;text-align:center'>Privacy Policy</h2>"
+                + "<h3 style='margin:6px 0 12px;text-align:center'>Koperasi Raya Abadi Saudara</h3>"
+                + "<p>Koperasi Raya Abadi Saudara is committed to protecting the privacy and confidentiality "
+                + "of its members and application users. This Privacy Policy explains how personal and financial "
+                + "data is collected, used, stored, and protected within the cooperative management system.</p>"
+                + "<h4 style='margin-bottom:4px'>1. Information We Collect</h4>"
+                + "<p>The application may collect member identity data, account information, and cooperative "
+                + "transaction data, including savings, loans, installments, and financial records.</p>"
+                + "<h4 style='margin-bottom:4px'>2. Use of Information</h4>"
+                + "<p>Collected data is used to manage membership, record cooperative transactions, generate "
+                + "reports, manage user access, and support internal cooperative operations.</p>"
+                + "<h4 style='margin-bottom:4px'>3. Data Access</h4>"
+                + "<p>Access to data is limited based on user roles and permissions. Users may only access "
+                + "information according to their authorized responsibilities.</p>"
+                + "<h4 style='margin-bottom:4px'>4. Data Storage and Security</h4>"
+                + "<p>Data is stored in the application database. The system applies role-based access control, "
+                + "and users are responsible for maintaining the confidentiality of their login credentials.</p>"
+                + "<h4 style='margin-bottom:4px'>5. Data Disclosure</h4>"
+                + "<p>Personal and financial data will not be shared with external parties unless required by law, "
+                + "official cooperative needs, or with the consent of the related member.</p>"
+                + "<h4 style='margin-bottom:4px'>6. Policy Updates</h4>"
+                + "<p>This Privacy Policy may be updated to reflect system improvements, operational needs, "
+                + "or regulatory requirements.</p>"
+                + "</body></html>",
+                "Privacy Policy",
+                JOptionPane.PLAIN_MESSAGE
+        );
+    }
+
+    private void tampilkanTermsOfService() {
+        JOptionPane.showMessageDialog(
+                this,
+                "<html><body style='width:420px'>"
+                + "<h2 style='margin:0;text-align:center'>Terms of Service</h2>"
+                + "<h3 style='margin:6px 0 12px;text-align:center'>Koperasi Raya Abadi Saudara</h3>"
+                + "<p>These Terms of Service define the rules and responsibilities for using the cooperative "
+                + "management application of Koperasi Raya Abadi Saudara.</p>"
+                + "<h4 style='margin-bottom:4px'>1. Authorized Use</h4>"
+                + "<p>The application may only be used by authorized users according to their assigned roles "
+                + "and responsibilities within the cooperative.</p>"
+                + "<h4 style='margin-bottom:4px'>2. Account Responsibility</h4>"
+                + "<p>Users are responsible for maintaining the confidentiality of their login credentials and "
+                + "for all activities performed through their account.</p>"
+                + "<h4 style='margin-bottom:4px'>3. Data Accuracy</h4>"
+                + "<p>Users must ensure that all data entered into the system is accurate, valid, and related "
+                + "to official cooperative activities.</p>"
+                + "<h4 style='margin-bottom:4px'>4. Restricted Actions</h4>"
+                + "<p>Users must not misuse the system, access unauthorized data, modify records without proper "
+                + "permission, or perform actions that may disrupt application operations.</p>"
+                + "<h4 style='margin-bottom:4px'>5. System Changes</h4>"
+                + "<p>The cooperative may update application features, access rules, and operational procedures "
+                + "as needed to support system improvements.</p>"
+                + "<h4 style='margin-bottom:4px'>6. Acceptance</h4>"
+                + "<p>By using this application, users agree to comply with these Terms of Service and the "
+                + "applicable cooperative policies.</p>"
+                + "</body></html>",
+                "Terms of Service",
                 JOptionPane.PLAIN_MESSAGE
         );
     }
@@ -480,6 +606,11 @@ public class DashboardAnggota extends javax.swing.JFrame {
         lblnoanggota = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         lbljeniskelamin = new javax.swing.JLabel();
+        jPanel20 = new javax.swing.JPanel();
+        Lcr12 = new javax.swing.JLabel();
+        LPrivacypolicy12 = new javax.swing.JLabel();
+        jSeparator14 = new javax.swing.JSeparator();
+        LTos12 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         jmenu = new javax.swing.JMenu();
         jmview = new javax.swing.JMenu();
@@ -590,7 +721,7 @@ public class DashboardAnggota extends javax.swing.JFrame {
                     .addComponent(pnlpinjamanaktif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlangsuran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Total", jPanel1);
@@ -611,7 +742,7 @@ public class DashboardAnggota extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -633,7 +764,7 @@ public class DashboardAnggota extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -655,7 +786,7 @@ public class DashboardAnggota extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -805,6 +936,48 @@ public class DashboardAnggota extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel20.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(), null));
+
+        Lcr12.setForeground(java.awt.SystemColor.textInactiveText);
+        Lcr12.setText("© 2026 Kelompok 2 Pemograman Visual. All Right Reserved");
+
+        LPrivacypolicy12.setForeground(java.awt.SystemColor.textInactiveText);
+        LPrivacypolicy12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LPrivacypolicy12.setText("Privacy Policy");
+
+        jSeparator14.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        LTos12.setForeground(java.awt.SystemColor.textInactiveText);
+        LTos12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LTos12.setText("Term Of Service");
+
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Lcr12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(LPrivacypolicy12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LTos12)
+                .addContainerGap())
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Lcr12)
+                        .addComponent(LTos12)
+                        .addComponent(LPrivacypolicy12)))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
         jMenuBar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         jmenu.setText("Menu");
@@ -825,22 +998,63 @@ public class DashboardAnggota extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LPrivacypolicy;
+    private javax.swing.JLabel LPrivacypolicy1;
+    private javax.swing.JLabel LPrivacypolicy10;
+    private javax.swing.JLabel LPrivacypolicy11;
+    private javax.swing.JLabel LPrivacypolicy12;
+    private javax.swing.JLabel LPrivacypolicy2;
+    private javax.swing.JLabel LPrivacypolicy3;
+    private javax.swing.JLabel LPrivacypolicy4;
+    private javax.swing.JLabel LPrivacypolicy5;
+    private javax.swing.JLabel LPrivacypolicy6;
+    private javax.swing.JLabel LPrivacypolicy7;
+    private javax.swing.JLabel LPrivacypolicy8;
+    private javax.swing.JLabel LPrivacypolicy9;
+    private javax.swing.JLabel LTos;
+    private javax.swing.JLabel LTos1;
+    private javax.swing.JLabel LTos10;
+    private javax.swing.JLabel LTos11;
+    private javax.swing.JLabel LTos12;
+    private javax.swing.JLabel LTos2;
+    private javax.swing.JLabel LTos3;
+    private javax.swing.JLabel LTos4;
+    private javax.swing.JLabel LTos5;
+    private javax.swing.JLabel LTos6;
+    private javax.swing.JLabel LTos7;
+    private javax.swing.JLabel LTos8;
+    private javax.swing.JLabel LTos9;
+    private javax.swing.JLabel Lcr;
+    private javax.swing.JLabel Lcr1;
+    private javax.swing.JLabel Lcr10;
+    private javax.swing.JLabel Lcr11;
+    private javax.swing.JLabel Lcr12;
+    private javax.swing.JLabel Lcr2;
+    private javax.swing.JLabel Lcr3;
+    private javax.swing.JLabel Lcr4;
+    private javax.swing.JLabel Lcr5;
+    private javax.swing.JLabel Lcr6;
+    private javax.swing.JLabel Lcr7;
+    private javax.swing.JLabel Lcr8;
+    private javax.swing.JLabel Lcr9;
     private javax.swing.JList<String> Lriwayatangsuran;
     private javax.swing.JList<String> Lriwayatpinjaman;
     private javax.swing.JList<String> Lriwayatsimpanan;
@@ -855,15 +1069,41 @@ public class DashboardAnggota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator10;
+    private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JSeparator jSeparator12;
+    private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenu jmenu;
     private javax.swing.JMenu jmhelp;

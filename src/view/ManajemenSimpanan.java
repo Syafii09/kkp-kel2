@@ -111,7 +111,10 @@ public class ManajemenSimpanan extends javax.swing.JPanel {
 
         jLabel6.setText("Keterangan");
 
+        btSimpan.setBackground(new java.awt.Color(0, 51, 204));
         btSimpan.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        btSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/diskette.png"))); // NOI18N
         btSimpan.setText("Simpan");
         btSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,7 +122,10 @@ public class ManajemenSimpanan extends javax.swing.JPanel {
             }
         });
 
+        btReset.setBackground(new java.awt.Color(153, 0, 0));
         btReset.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btReset.setForeground(new java.awt.Color(255, 255, 255));
+        btReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/undowhite.png"))); // NOI18N
         btReset.setText("Reset");
 
         cbjenis.setEditable(true);

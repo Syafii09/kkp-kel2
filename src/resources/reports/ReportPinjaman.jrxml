@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="LOGO_IMAGE" class="java.net.URL"/>
 	<parameter name="TANGGAL_AWAL" class="java.sql.Date"/>
 	<parameter name="TANGGAL_AKHIR" class="java.sql.Date"/>
 	<parameter name="ORDER_PINJAMAN" class="java.lang.String"/>
@@ -61,7 +62,7 @@ ORDER BY $P!{ORDER_PINJAMAN};]]>
 			</staticText>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="88" height="79" uuid="0372d026-64b7-40e4-a1f3-1125aed7f4c7"/>
-				<imageExpression><![CDATA["C:\\Users\\sabil\\Documents\\Tugas_Visual\\kkp-kel2\\src\\resources\\images\\Logo_Image.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{LOGO_IMAGE}]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="0" y="78" width="555" height="1" uuid="b542573e-2115-46b1-a1d6-83c0949cbbd4"/>

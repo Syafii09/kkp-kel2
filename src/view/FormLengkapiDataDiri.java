@@ -22,6 +22,9 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
     private final String namaUserLogin;
     private final boolean kembaliKeDashboard;
     private final ButtonGroup bgJenisKelamin = new ButtonGroup();
+    private int dragX;
+    private int dragY;
+    private boolean dataAwalLengkap;
 
     /**
      * Creates new form FormLengkapiDataDiri
@@ -45,6 +48,7 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
 
     private void setupForm() {
         setLocationRelativeTo(null);
+        setupDragFrame();
         bgJenisKelamin.add(rbLakianggota);
         bgJenisKelamin.add(rbPerempuananggota);
         bgJenisKelamin.add(rbother);
@@ -55,6 +59,26 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
         btSimpancalonanggota.addActionListener(e -> simpanDataDiri());
         btResetcalonanggota.addActionListener(e -> resetInput());
         btExitcalonanggota.addActionListener(e -> kembaliKeLogin());
+    }
+
+    private void setupDragFrame() {
+        java.awt.event.MouseAdapter dragListener = new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dragX = evt.getX();
+                dragY = evt.getY();
+            }
+
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                setLocation(evt.getXOnScreen() - dragX, evt.getYOnScreen() - dragY);
+            }
+        };
+
+        getRootPane().addMouseListener(dragListener);
+        getRootPane().addMouseMotionListener(dragListener);
+        jLabel1.addMouseListener(dragListener);
+        jLabel1.addMouseMotionListener(dragListener);
     }
 
     private void muatDataAnggota() {
@@ -86,6 +110,9 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
             } else if ("Laki-laki".equalsIgnoreCase(data.jenisKelamin())) {
                 rbLakianggota.setSelected(true);
             }
+
+            dataAwalLengkap = dataDiriLengkap(data);
+            jLabel1.setText(dataAwalLengkap ? "Edit Data Diri" : "Lengkapi  Data Diri");
         } catch (SQLException | RuntimeException ex) {
             JOptionPane.showMessageDialog(this, "Gagal memuat data anggota.\n" + ex.getMessage(),
                     "Database Error", JOptionPane.ERROR_MESSAGE);
@@ -126,7 +153,7 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
 
             anggotaDAO.lengkapiDataDiri(idAnggota, data);
             SesiLogin.masuk(SesiLogin.getIdUser(), idAnggota, nama, SesiLogin.getGroupUser());
-            JOptionPane.showMessageDialog(this, "Data diri berhasil dilengkapi.");
+            JOptionPane.showMessageDialog(this, dataAwalLengkap ? "Data diri berhasil diperbarui." : "Data diri berhasil dilengkapi.");
             new DashboardAnggota(idAnggota, nama).setVisible(true);
             dispose();
         } catch (SQLException | RuntimeException ex) {
@@ -160,6 +187,22 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
 
     private String nilai(String value, String defaultValue) {
         return value == null || value.isBlank() ? defaultValue : value;
+    }
+
+    private boolean dataDiriLengkap(AnggotaDAO.AnggotaData data) {
+        return data != null
+                && !kosong(data.nama())
+                && !kosong(data.nik())
+                && !kosong(data.tempatLahir())
+                && data.tanggalLahir() != null
+                && !kosong(data.jenisKelamin())
+                && !kosong(data.alamat())
+                && !kosong(data.noHp())
+                && !kosong(data.divisi());
+    }
+
+    private boolean kosong(String value) {
+        return value == null || value.isBlank();
     }
 
     /**

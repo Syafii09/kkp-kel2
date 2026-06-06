@@ -120,7 +120,8 @@ public class Angsuran extends javax.swing.JPanel {
             }
         });
 
-        btnsimpanang.setBackground(new java.awt.Color(51, 153, 255));
+        btnsimpanang.setBackground(new java.awt.Color(0, 51, 204));
+        btnsimpanang.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnsimpanang.setForeground(new java.awt.Color(255, 255, 255));
         btnsimpanang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/diskette.png"))); // NOI18N
         btnsimpanang.setText("Simpan");
@@ -130,7 +131,8 @@ public class Angsuran extends javax.swing.JPanel {
             }
         });
 
-        btnresetang.setBackground(new java.awt.Color(255, 0, 51));
+        btnresetang.setBackground(new java.awt.Color(153, 0, 0));
+        btnresetang.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnresetang.setForeground(new java.awt.Color(255, 255, 255));
         btnresetang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/undowhite.png"))); // NOI18N
         btnresetang.setText("Reset");
@@ -146,11 +148,12 @@ public class Angsuran extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
                                 .addComponent(btnsimpanang)
-                                .addGap(33, 33, 33)
-                                .addComponent(btnresetang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnresetang, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -205,7 +208,7 @@ public class Angsuran extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnsimpanang)
                     .addComponent(btnresetang))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());

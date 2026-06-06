@@ -210,7 +210,10 @@ public class ManajemenPinjaman extends javax.swing.JPanel {
 
         jLabel6.setText("Tujuan");
 
+        btnSimpanPinjaman.setBackground(new java.awt.Color(0, 51, 204));
         btnSimpanPinjaman.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSimpanPinjaman.setForeground(new java.awt.Color(255, 255, 255));
+        btnSimpanPinjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/diskette.png"))); // NOI18N
         btnSimpanPinjaman.setText("Simpan");
         btnSimpanPinjaman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -218,7 +221,10 @@ public class ManajemenPinjaman extends javax.swing.JPanel {
             }
         });
 
+        btnResetPinjaman.setBackground(new java.awt.Color(153, 0, 0));
         btnResetPinjaman.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnResetPinjaman.setForeground(new java.awt.Color(255, 255, 255));
+        btnResetPinjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/undowhite.png"))); // NOI18N
         btnResetPinjaman.setText("Reset");
         btnResetPinjaman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

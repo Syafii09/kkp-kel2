@@ -19,6 +19,9 @@ public class JasperReportDAO {
             throw new IllegalArgumentException("File report tidak ditemukan.");
         }
 
+        Map<String, Object> parameterReport = new HashMap<>(parameter);
+        parameterReport.putIfAbsent("LOGO_IMAGE", getClass().getResource("/resources/images/Logo_Image.png"));
+
         Class<?> compileManagerClass = Class.forName("net.sf.jasperreports.engine.JasperCompileManager");
         Class<?> jasperReportClass = Class.forName("net.sf.jasperreports.engine.JasperReport");
         Class<?> fillManagerClass = Class.forName("net.sf.jasperreports.engine.JasperFillManager");
@@ -33,7 +36,7 @@ public class JasperReportDAO {
         try (Connection connection = Koneksi.getConnection()) {
             try {
                 Object jasperReport = compileReport.invoke(null, reportStream);
-                return fillReport.invoke(null, jasperReport, parameter, connection);
+                return fillReport.invoke(null, jasperReport, parameterReport, connection);
             } catch (InvocationTargetException ex) {
                 Throwable cause = ex.getCause();
                 throw new Exception(cause == null ? ex.getMessage() : pesanException(cause), cause == null ? ex : cause);
