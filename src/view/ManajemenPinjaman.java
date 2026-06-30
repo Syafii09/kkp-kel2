@@ -43,6 +43,12 @@ public class ManajemenPinjaman extends javax.swing.JPanel {
         aktifkanSearchPinjaman();
         resetFormPinjaman();
         kosongkanTabelPinjaman();
+        addHierarchyListener(evt -> {
+        if ((evt.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0
+                && isShowing()) {
+            muatComboAnggota();
+        }
+    });
     }
 
     /**

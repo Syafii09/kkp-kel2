@@ -43,6 +43,12 @@ public class ManajemenSimpanan extends javax.swing.JPanel {
         btReset.addActionListener(e -> resetFormSimpanan());
         cbNoanggota.setSelectedItem("");
         kosongkanTabelSimpanan();
+        addHierarchyListener(evt -> {
+        if ((evt.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0
+                && isShowing()) {
+            muatComboAnggota();
+        }
+    });
     }
 
     private void aktifkanNominalSimpananWajib() {

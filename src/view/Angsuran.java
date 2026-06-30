@@ -44,6 +44,12 @@ public class Angsuran extends javax.swing.JPanel {
         aktifkanSearchComboPinjaman();
         btnresetang.addActionListener(e -> resetFormAngsuran());
         resetFormAngsuran();
+        addHierarchyListener(evt -> {
+        if ((evt.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0
+                && isShowing()) {
+            muatComboPinjaman();
+        }
+    });
     }
 
     /**

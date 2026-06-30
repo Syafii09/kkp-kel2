@@ -19,6 +19,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        java.util.Locale locale = new java.util.Locale("id", "ID");
+        java.util.Locale.setDefault(locale);
         Login.applyLookAndFeel();
         java.awt.EventQueue.invokeLater(() -> {
             SesiLogin.SesiTersimpan sesi = SesiLogin.getInfoLoginTersimpan();
