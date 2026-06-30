@@ -103,7 +103,7 @@ public class Pengaturan extends javax.swing.JPanel {
     private void setupTabelUser() {
         TabelUser.setModel(new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "No", "Nama", "Email", "No Anggota", "Role", "Status", "Waktu Dibuat"}
+                new String[]{"ID", "No", "No Anggota", "Nama", "Email", "Jabatan", "Role", "Status", "Waktu Dibuat"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -118,12 +118,13 @@ public class Pengaturan extends javax.swing.JPanel {
             TabelUser.getColumnModel().getColumn(0).setMaxWidth(0);
             TabelUser.getColumnModel().getColumn(1).setPreferredWidth(42);
             TabelUser.getColumnModel().getColumn(1).setMaxWidth(55);
-            TabelUser.getColumnModel().getColumn(2).setPreferredWidth(180);
-            TabelUser.getColumnModel().getColumn(3).setPreferredWidth(220);
-            TabelUser.getColumnModel().getColumn(4).setPreferredWidth(110);
-            TabelUser.getColumnModel().getColumn(5).setPreferredWidth(150);
-            TabelUser.getColumnModel().getColumn(6).setPreferredWidth(90);
-            TabelUser.getColumnModel().getColumn(7).setPreferredWidth(150);
+            TabelUser.getColumnModel().getColumn(2).setPreferredWidth(110);
+            TabelUser.getColumnModel().getColumn(3).setPreferredWidth(180);
+            TabelUser.getColumnModel().getColumn(4).setPreferredWidth(220);
+            TabelUser.getColumnModel().getColumn(5).setPreferredWidth(140);
+            TabelUser.getColumnModel().getColumn(6).setPreferredWidth(150);
+            TabelUser.getColumnModel().getColumn(7).setPreferredWidth(90);
+            TabelUser.getColumnModel().getColumn(8).setPreferredWidth(150);
         }
     }
 
@@ -224,9 +225,10 @@ public class Pengaturan extends javax.swing.JPanel {
                 model.addRow(new Object[]{
                     user.idUser(),
                     nomor++,
+                    user.noAnggota(),
                     user.nama(),
                     user.email(),
-                    user.noAnggota(),
+                    user.jabatan(),
                     displayRole(user.namaGroup()),
                     user.status(),
                     user.createdAt()
@@ -268,10 +270,11 @@ public class Pengaturan extends javax.swing.JPanel {
         FormPengisianUser formUser = new FormPengisianUser();
         formUser.setModeEdit(
                 (Integer) model.getValueAt(modelRow, 0),
-                String.valueOf(model.getValueAt(modelRow, 2)),
                 String.valueOf(model.getValueAt(modelRow, 3)),
-                String.valueOf(model.getValueAt(modelRow, 5)),
-                nilaiTabel(model.getValueAt(modelRow, 4))
+                String.valueOf(model.getValueAt(modelRow, 4)),
+                String.valueOf(model.getValueAt(modelRow, 6)),
+                nilaiTabel(model.getValueAt(modelRow, 2)),
+                nilaiTabel(model.getValueAt(modelRow, 5))
         );
         formUser.setOnDataSaved(this::refreshDataUser);
         formUser.setVisible(true);
@@ -290,7 +293,7 @@ public class Pengaturan extends javax.swing.JPanel {
 
         DefaultTableModel model = (DefaultTableModel) TabelUser.getModel();
         int idUser = (Integer) model.getValueAt(modelRow, 0);
-        String nama = String.valueOf(model.getValueAt(modelRow, 2));
+        String nama = String.valueOf(model.getValueAt(modelRow, 3));
 
         int pilihan = JOptionPane.showConfirmDialog(
                 this,
@@ -426,17 +429,17 @@ public class Pengaturan extends javax.swing.JPanel {
 
         TabelUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "No", "Nama", "Role", "Waktu Dibuat"
+                "No", "No Anggota", "Nama", "Email", "Jabatan", "Role", "Status", "Waktu Dibuat"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, true, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -446,9 +449,6 @@ public class Pengaturan extends javax.swing.JPanel {
         jScrollPane1.setViewportView(TabelUser);
         if (TabelUser.getColumnModel().getColumnCount() > 0) {
             TabelUser.getColumnModel().getColumn(0).setMaxWidth(30);
-            TabelUser.getColumnModel().getColumn(1).setResizable(false);
-            TabelUser.getColumnModel().getColumn(2).setResizable(false);
-            TabelUser.getColumnModel().getColumn(3).setResizable(false);
         }
 
         btHapususer.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -473,11 +473,11 @@ public class Pengaturan extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(30, 30, 30)
                         .addComponent(btTambahuser)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btEdituser)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btHapususer)))
                 .addContainerGap())
         );

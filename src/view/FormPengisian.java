@@ -330,6 +330,7 @@ public class FormPengisian extends javax.swing.JFrame {
     private void initComponents() {
 
         bgJenkelanggota = new javax.swing.ButtonGroup();
+        jLabel10 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -356,6 +357,8 @@ public class FormPengisian extends javax.swing.JFrame {
         tfNIK = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         rbother = new javax.swing.JRadioButton();
+
+        jLabel10.setText("jLabel10");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -398,7 +401,7 @@ public class FormPengisian extends javax.swing.JFrame {
         btResetcalonanggota.setText("RESET");
 
         btExitcalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btExitcalonanggota.setText("CANCEL");
+        btExitcalonanggota.setText("KEMBALI");
 
         jLabel11.setText("NIK");
 
@@ -544,6 +547,7 @@ public class FormPengisian extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser calCalonanggota;
     private com.toedter.calendar.JDateChooser calTgldaftaranggota;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

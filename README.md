@@ -167,6 +167,7 @@ kkp-kel2/
 ├── database/
 │   ├── koperasi_raya_abadi.sql
 │   └── migrations/
+│       └── 2026_06_combined_migrations.sql
 ├── lib/
 ├── nbproject/
 ├── build.xml
@@ -195,6 +196,12 @@ Tabel utama:
 - `transaksi`
 - `aktivitas`
 - `pengaturan_koperasi`
+
+Migration tambahan digabung dalam satu file:
+
+```text
+database/migrations/2026_06_combined_migrations.sql
+```
 
 ---
 

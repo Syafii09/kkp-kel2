@@ -34,7 +34,6 @@ public class FormPengisianUser extends javax.swing.JFrame {
         modeEdit = false;
         idUserEdit = -1;
         jLabel1.setText("Input User");
-        btSimpan.setText("Simpan");
         pfpassword.setEnabled(true);
         pfconfirmpassword.setEnabled(true);
     }
@@ -44,14 +43,17 @@ public class FormPengisianUser extends javax.swing.JFrame {
     }
 
     public void setModeEdit(int idUser, String nama, String email, String role, String noAnggota) {
+        setModeEdit(idUser, nama, email, role, noAnggota, "");
+    }
+
+    public void setModeEdit(int idUser, String nama, String email, String role, String noAnggota, String jabatan) {
         modeEdit = true;
         idUserEdit = idUser;
         jLabel1.setText("Edit User");
-        btSimpan.setText("Update");
         tfNIK.setText(nama);
         tfNamacalonanggota.setText(email);
-        tfNoAnggota.setText(noAnggota == null ? "" : noAnggota);
         pilihRole(role);
+        pilihJabatan(jabatan);
         pfpassword.setText("");
         pfconfirmpassword.setText("");
         pfpassword.putClientProperty("JTextField.placeholderText", "Kosongkan jika tidak diganti");
@@ -65,11 +67,20 @@ public class FormPengisianUser extends javax.swing.JFrame {
     private void setupAksi() {
         tfNIK.putClientProperty("JTextField.placeholderText", "Nama");
         tfNamacalonanggota.putClientProperty("JTextField.placeholderText", "Email");
-        tfNoAnggota.putClientProperty("JTextField.placeholderText", "Isi untuk role User/Pengguna");
         pfpassword.putClientProperty("JTextField.placeholderText", "Password");
         pfconfirmpassword.putClientProperty("JTextField.placeholderText", "Confirm password");
-        btSimpan.addActionListener(e -> simpanUser());
-        btBatal.addActionListener(e -> dispose());
+        getRootPane().registerKeyboardAction(
+                e -> simpanUser(),
+                javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.KeyEvent.CTRL_DOWN_MASK),
+                javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW
+        );
+        getRootPane().registerKeyboardAction(
+                e -> dispose(),
+                javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
+                javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW
+        );
+        btSave.addActionListener(e -> simpanUser());
+        btCancel.addActionListener(e -> dispose());
         tfNIK.addActionListener(e -> tfNamacalonanggota.requestFocus());
         tfNamacalonanggota.addActionListener(e -> pfpassword.requestFocus());
         pfpassword.addActionListener(e -> pfconfirmpassword.requestFocus());
@@ -77,7 +88,7 @@ public class FormPengisianUser extends javax.swing.JFrame {
     }
 
     private void muatRole() {
-        DefaultComboBoxModel<RoleItem> model = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
 
         try {
             for (UserDAO.RoleData role : userDAO.getRoles()) {
@@ -101,15 +112,32 @@ public class FormPengisianUser extends javax.swing.JFrame {
         }
     }
 
+    private void pilihJabatan(String jabatan) {
+        if (jabatan == null || jabatan.isBlank()) {
+            cbJabatan.setSelectedIndex(0);
+            return;
+        }
+
+        for (int index = 0; index < cbJabatan.getItemCount(); index++) {
+            String item = cbJabatan.getItemAt(index);
+            if (item != null && item.equalsIgnoreCase(jabatan)) {
+                cbJabatan.setSelectedIndex(index);
+                return;
+            }
+        }
+        cbJabatan.setSelectedIndex(0);
+    }
+
     private void simpanUser() {
         String nama = tfNIK.getText().trim();
         String email = tfNamacalonanggota.getText().trim();
         String password = new String(pfpassword.getPassword()).trim();
         String konfirmasi = new String(pfconfirmpassword.getPassword()).trim();
         Object selectedRole = cbgroups.getSelectedItem();
+        String jabatan = cbJabatan.getSelectedItem() == null ? "" : cbJabatan.getSelectedItem().toString();
 
-        if (nama.isEmpty() || email.isEmpty() || selectedRole == null) {
-            JOptionPane.showMessageDialog(this, "Nama, email, dan role wajib diisi.", "Validasi", JOptionPane.WARNING_MESSAGE);
+        if (nama.isEmpty() || email.isEmpty() || selectedRole == null || jabatan.startsWith("--")) {
+            JOptionPane.showMessageDialog(this, "Nama, email, role, dan jabatan wajib diisi.", "Validasi", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -133,57 +161,27 @@ public class FormPengisianUser extends javax.swing.JFrame {
         }
 
         RoleItem role = (RoleItem) selectedRole;
-        Integer idAnggota = cariIdAnggotaUntukRole(role);
-        if ("Pengguna".equalsIgnoreCase(role.namaGroup()) && idAnggota == null) {
-            return;
-        }
+        Integer idAnggota = null;
 
         if (modeEdit) {
-            updateUser(nama, email, password, role.idGroup(), idAnggota);
+            updateUser(nama, email, password, role.idGroup(), idAnggota, jabatan);
         } else {
-            tambahUser(nama, email, password, role.idGroup(), idAnggota);
+            tambahUser(nama, email, password, role.idGroup(), idAnggota, jabatan);
         }
     }
 
-    private Integer cariIdAnggotaUntukRole(RoleItem role) {
-        if (!"Pengguna".equalsIgnoreCase(role.namaGroup())) {
-            return null;
-        }
-
-        String noAnggota = tfNoAnggota.getText().trim();
-        if (noAnggota.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No Anggota wajib diisi untuk role User/Pengguna.", "Validasi", JOptionPane.WARNING_MESSAGE);
-            tfNoAnggota.requestFocus();
-            return null;
-        }
-
+    private void tambahUser(String nama, String email, String password, int idGroup, Integer idAnggota, String jabatan) {
         try {
-            Integer idAnggota = userDAO.getIdAnggotaAktif(noAnggota);
-            if (idAnggota != null) {
-                return idAnggota;
-            }
-
-            JOptionPane.showMessageDialog(this, "No Anggota tidak ditemukan atau belum aktif.", "Validasi", JOptionPane.WARNING_MESSAGE);
-            tfNoAnggota.requestFocus();
-        } catch (SQLException | RuntimeException ex) {
-            JOptionPane.showMessageDialog(this, "Gagal mengecek No Anggota.\n" + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-        return null;
-    }
-
-    private void tambahUser(String nama, String email, String password, int idGroup, Integer idAnggota) {
-        try {
-            userDAO.insert(nama, email, password, idGroup, idAnggota);
+            userDAO.insert(nama, email, password, idGroup, idAnggota, jabatan);
             selesaiSimpan("User berhasil ditambahkan.");
         } catch (SQLException ex) {
             tampilkanErrorSimpan(ex);
         }
     }
 
-    private void updateUser(String nama, String email, String password, int idGroup, Integer idAnggota) {
+    private void updateUser(String nama, String email, String password, int idGroup, Integer idAnggota, String jabatan) {
         try {
-            userDAO.update(idUserEdit, nama, email, password, idGroup, idAnggota);
+            userDAO.update(idUserEdit, nama, email, password, idGroup, idAnggota, jabatan);
             selesaiSimpan("User berhasil diperbarui.");
         } catch (SQLException ex) {
             tampilkanErrorSimpan(ex);
@@ -227,12 +225,13 @@ public class FormPengisianUser extends javax.swing.JFrame {
         pfconfirmpassword = new javax.swing.JPasswordField();
         jLabel13 = new javax.swing.JLabel();
         cbgroups = new javax.swing.JComboBox<>();
-        jLabel14 = new javax.swing.JLabel();
-        tfNoAnggota = new javax.swing.JTextField();
-        btBatal = new javax.swing.JButton();
-        btSimpan = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        cbJabatan = new javax.swing.JComboBox<>();
+        btSave = new javax.swing.JButton();
+        btCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -248,13 +247,15 @@ public class FormPengisianUser extends javax.swing.JFrame {
 
         jLabel13.setText("Role");
 
-        cbgroups.setModel(new javax.swing.DefaultComboBoxModel<>());
+        cbgroups.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Pilih Role --" }));
 
-        jLabel14.setText("No Anggota");
+        jLabel2.setText("Jabatan");
 
-        btBatal.setText("Batal");
+        cbJabatan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Pilih Jabatan --", "Ketua Koperasi", "Wakil Ketua", "Sekretaris", "Bendahara", "Supervisor", "Staff" }));
 
-        btSimpan.setText("Simpan");
+        btSave.setText("Simpan");
+
+        btCancel.setText("Kembali");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -264,6 +265,14 @@ public class FormPengisianUser extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(cbgroups, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbJabatan, 0, 162, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -281,18 +290,13 @@ public class FormPengisianUser extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                                    .addComponent(pfconfirmpassword)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(cbgroups, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                                .addComponent(tfNoAnggota))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btBatal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btSimpan)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(pfconfirmpassword))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btSave)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -317,38 +321,38 @@ public class FormPengisianUser extends javax.swing.JFrame {
                     .addComponent(pfpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pfconfirmpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbgroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfNoAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btBatal)
-                    .addComponent(btSimpan))
-                .addContainerGap(12, Short.MAX_VALUE))
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbgroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbJabatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btSave)
+                    .addComponent(btCancel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btBatal;
-    private javax.swing.JButton btSimpan;
-    private javax.swing.JComboBox<RoleItem> cbgroups;
+    private javax.swing.JButton btCancel;
+    private javax.swing.JButton btSave;
+    private javax.swing.JComboBox<String> cbJabatan;
+    private javax.swing.JComboBox<String> cbgroups;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPasswordField pfconfirmpassword;
     private javax.swing.JPasswordField pfpassword;
     private javax.swing.JTextField tfNIK;
-    private javax.swing.JTextField tfNoAnggota;
     private javax.swing.JTextField tfNamacalonanggota;
     // End of variables declaration//GEN-END:variables
 

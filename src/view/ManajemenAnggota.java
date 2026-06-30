@@ -105,8 +105,26 @@ public class ManajemenAnggota extends javax.swing.JPanel {
             new String [] {
                 "No", "No. Anggota", "NIK", "Nama", "No. HP", "Divisi", "Alamat", "Tgl daftar", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tbAnggota);
+        if (tbAnggota.getColumnModel().getColumnCount() > 0) {
+            tbAnggota.getColumnModel().getColumn(0).setMaxWidth(30);
+            tbAnggota.getColumnModel().getColumn(1).setResizable(false);
+            tbAnggota.getColumnModel().getColumn(2).setResizable(false);
+            tbAnggota.getColumnModel().getColumn(3).setResizable(false);
+            tbAnggota.getColumnModel().getColumn(4).setResizable(false);
+            tbAnggota.getColumnModel().getColumn(5).setResizable(false);
+            tbAnggota.getColumnModel().getColumn(7).setResizable(false);
+            tbAnggota.getColumnModel().getColumn(8).setResizable(false);
+        }
 
         DetailAnggota.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 

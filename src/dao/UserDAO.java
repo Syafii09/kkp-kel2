@@ -125,9 +125,10 @@ public class UserDAO {
 
     private int insertUserSignup(Connection connection, int idGroup, int idAnggota, String nama, String email, String password)
             throws SQLException {
+        pastikanKolomJabatan(connection);
         String sql = """
-                INSERT INTO users (id_group, id_anggota, nama, email, password_hash, status)
-                VALUES (?, ?, ?, ?, SHA2(?, 256), 'Aktif')
+                INSERT INTO users (id_group, id_anggota, nama, email, password_hash, status, jabatan)
+                VALUES (?, ?, ?, ?, SHA2(?, 256), 'Aktif', ?)
                 """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -136,6 +137,7 @@ public class UserDAO {
             statement.setString(3, nama);
             statement.setString(4, email);
             statement.setString(5, password);
+            statement.setString(6, "Anggota");
             return statement.executeUpdate();
         }
     }
@@ -175,7 +177,8 @@ public class UserDAO {
 
     public List<UserData> getUsersByGroup(Integer idGroup) throws SQLException {
         String sql = """
-                SELECT u.id_user, u.nama, u.email, a.no_anggota, g.nama_group, u.status, u.created_at
+                SELECT u.id_user, u.nama, u.email, a.no_anggota, u.jabatan,
+                       g.nama_group, u.status, u.created_at
                 FROM users u
                 JOIN groups g ON g.id_group = u.id_group
                 LEFT JOIN anggota a ON a.id_anggota = u.id_anggota
@@ -183,8 +186,9 @@ public class UserDAO {
                 ORDER BY g.nama_group, u.nama
                 """;
 
-        try (Connection connection = Koneksi.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = Koneksi.getConnection()) {
+            pastikanKolomJabatan(connection);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
             if (idGroup == null) {
                 statement.setNull(1, java.sql.Types.INTEGER);
                 statement.setNull(2, java.sql.Types.INTEGER);
@@ -201,12 +205,14 @@ public class UserDAO {
                             result.getString("nama"),
                             result.getString("email"),
                             result.getString("no_anggota"),
+                            result.getString("jabatan"),
                             result.getString("nama_group"),
                             result.getString("status"),
                             result.getTimestamp("created_at")
                     ));
                 }
                 return data;
+            }
             }
         }
     }
@@ -223,42 +229,48 @@ public class UserDAO {
         }
     }
 
-    public void insert(String nama, String email, String password, int idGroup, Integer idAnggota) throws SQLException {
+    public void insert(String nama, String email, String password, int idGroup, Integer idAnggota, String jabatan) throws SQLException {
         String sql = """
-                INSERT INTO users (id_group, id_anggota, nama, email, password_hash, status)
-                VALUES (?, ?, ?, ?, SHA2(?, 256), 'Aktif')
+                INSERT INTO users (id_group, id_anggota, nama, email, password_hash, status, jabatan)
+                VALUES (?, ?, ?, ?, SHA2(?, 256), 'Aktif', ?)
                 """;
 
-        try (Connection connection = Koneksi.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = Koneksi.getConnection()) {
+            pastikanKolomJabatan(connection);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, idGroup);
             setNullableInt(statement, 2, idAnggota);
             statement.setString(3, nama);
             statement.setString(4, email);
             statement.setString(5, password);
+            statement.setString(6, kosongJadiNull(jabatan));
             statement.executeUpdate();
+            }
         }
     }
 
-    public void update(int idUser, String nama, String email, String password, int idGroup, Integer idAnggota)
+    public void update(int idUser, String nama, String email, String password, int idGroup, Integer idAnggota, String jabatan)
             throws SQLException {
         String sql = password == null || password.isEmpty()
-                ? "UPDATE users SET id_group = ?, id_anggota = ?, nama = ?, email = ? WHERE id_user = ?"
-                : "UPDATE users SET id_group = ?, id_anggota = ?, nama = ?, email = ?, password_hash = SHA2(?, 256) WHERE id_user = ?";
+                ? "UPDATE users SET id_group = ?, id_anggota = ?, nama = ?, email = ?, jabatan = ? WHERE id_user = ?"
+                : "UPDATE users SET id_group = ?, id_anggota = ?, nama = ?, email = ?, jabatan = ?, password_hash = SHA2(?, 256) WHERE id_user = ?";
 
-        try (Connection connection = Koneksi.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = Koneksi.getConnection()) {
+            pastikanKolomJabatan(connection);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, idGroup);
             setNullableInt(statement, 2, idAnggota);
             statement.setString(3, nama);
             statement.setString(4, email);
+            statement.setString(5, kosongJadiNull(jabatan));
             if (password == null || password.isEmpty()) {
-                statement.setInt(5, idUser);
-            } else {
-                statement.setString(5, password);
                 statement.setInt(6, idUser);
+            } else {
+                statement.setString(6, password);
+                statement.setInt(7, idUser);
             }
             statement.executeUpdate();
+            }
         }
     }
 
@@ -279,13 +291,38 @@ public class UserDAO {
         statement.setInt(index, value);
     }
 
+    private void pastikanKolomJabatan(Connection connection) throws SQLException {
+        String cekSql = """
+                SELECT COUNT(*) AS jumlah
+                FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'users'
+                  AND COLUMN_NAME = 'jabatan'
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(cekSql);
+             ResultSet result = statement.executeQuery()) {
+            if (result.next() && result.getInt("jumlah") > 0) {
+                return;
+            }
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("ALTER TABLE users ADD COLUMN jabatan varchar(100) DEFAULT NULL AFTER email");
+        }
+    }
+
+    private String kosongJadiNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
+    }
+
     public record LoginResult(Integer idUser, Integer idAnggota, String nama, String group, String statusAnggota) {
     }
 
     public record RoleData(int idGroup, String namaGroup) {
     }
 
-    public record UserData(int idUser, String nama, String email, String noAnggota,
+    public record UserData(int idUser, String nama, String email, String noAnggota, String jabatan,
                            String namaGroup, String status, java.sql.Timestamp createdAt) {
     }
 }

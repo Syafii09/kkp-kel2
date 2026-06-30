@@ -259,6 +259,11 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
 
         btSimpancalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btSimpancalonanggota.setText("SIMPAN");
+        btSimpancalonanggota.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSimpancalonanggotaActionPerformed(evt);
+            }
+        });
 
         btResetcalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btResetcalonanggota.setText("RESET");
@@ -268,7 +273,7 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
         jLabel1.setText("Lengkapi  Data Diri");
 
         btExitcalonanggota.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btExitcalonanggota.setText("CANCEL");
+        btExitcalonanggota.setText("KEMBALI");
 
         jLabel2.setText("No. Anggota");
 
@@ -412,6 +417,10 @@ public class FormLengkapiDataDiri extends javax.swing.JFrame {
     private void rbotherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbotherActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rbotherActionPerformed
+
+    private void btSimpancalonanggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSimpancalonanggotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btSimpancalonanggotaActionPerformed
 
     /**
      * @param args the command line arguments

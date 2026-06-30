@@ -6,6 +6,7 @@ package view;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Window;
 import javax.swing.Box;
@@ -141,6 +142,7 @@ public class Dashboard extends javax.swing.JFrame {
         isiTab(jpManggota, new ManajemenAnggota());
         isiTab(jpMsimpanan, new ManajemenSimpanan());
         isiTab(jpMpinjaman, new ManajemenPinjaman());
+        isiTab(JpManajemenAgunan, new ManajemenAgunan().getContentPane());
         isiTab(jpangsuran, new Angsuran());
         isiTab(jptransaksi, new Transaksi());
         isiTab(jplaporan, new Laporan());
@@ -148,7 +150,7 @@ public class Dashboard extends javax.swing.JFrame {
         Transaksi.setSelectedIndex(0);
     }
 
-    private void isiTab(JPanel tabPanel, JPanel contentPanel) {
+    private void isiTab(JPanel tabPanel, Component contentPanel) {
         tabPanel.removeAll();
         tabPanel.setLayout(new BorderLayout());
         tabPanel.add(contentPanel, BorderLayout.CENTER);
@@ -314,6 +316,7 @@ public class Dashboard extends javax.swing.JFrame {
         jpManggota = new javax.swing.JPanel();
         jpMsimpanan = new javax.swing.JPanel();
         jpMpinjaman = new javax.swing.JPanel();
+        JpManajemenAgunan = new javax.swing.JPanel();
         jpangsuran = new javax.swing.JPanel();
         jptransaksi = new javax.swing.JPanel();
         jplaporan = new javax.swing.JPanel();
@@ -342,7 +345,7 @@ public class Dashboard extends javax.swing.JFrame {
         jpdashboard.setLayout(jpdashboardLayout);
         jpdashboardLayout.setHorizontalGroup(
             jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jpdashboardLayout.setVerticalGroup(
             jpdashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -358,7 +361,7 @@ public class Dashboard extends javax.swing.JFrame {
         jpManggota.setLayout(jpManggotaLayout);
         jpManggotaLayout.setHorizontalGroup(
             jpManggotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jpManggotaLayout.setVerticalGroup(
             jpManggotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -373,7 +376,7 @@ public class Dashboard extends javax.swing.JFrame {
         jpMsimpanan.setLayout(jpMsimpananLayout);
         jpMsimpananLayout.setHorizontalGroup(
             jpMsimpananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jpMsimpananLayout.setVerticalGroup(
             jpMsimpananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,7 +391,7 @@ public class Dashboard extends javax.swing.JFrame {
         jpMpinjaman.setLayout(jpMpinjamanLayout);
         jpMpinjamanLayout.setHorizontalGroup(
             jpMpinjamanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jpMpinjamanLayout.setVerticalGroup(
             jpMpinjamanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -397,13 +400,26 @@ public class Dashboard extends javax.swing.JFrame {
 
         Transaksi.addTab("Manajemen Pinjaman", jpMpinjaman);
 
+        javax.swing.GroupLayout JpManajemenAgunanLayout = new javax.swing.GroupLayout(JpManajemenAgunan);
+        JpManajemenAgunan.setLayout(JpManajemenAgunanLayout);
+        JpManajemenAgunanLayout.setHorizontalGroup(
+            JpManajemenAgunanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1136, Short.MAX_VALUE)
+        );
+        JpManajemenAgunanLayout.setVerticalGroup(
+            JpManajemenAgunanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 606, Short.MAX_VALUE)
+        );
+
+        Transaksi.addTab("Manajemen Agunan", JpManajemenAgunan);
+
         jpangsuran.setOpaque(false);
 
         javax.swing.GroupLayout jpangsuranLayout = new javax.swing.GroupLayout(jpangsuran);
         jpangsuran.setLayout(jpangsuranLayout);
         jpangsuranLayout.setHorizontalGroup(
             jpangsuranLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jpangsuranLayout.setVerticalGroup(
             jpangsuranLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -418,7 +434,7 @@ public class Dashboard extends javax.swing.JFrame {
         jptransaksi.setLayout(jptransaksiLayout);
         jptransaksiLayout.setHorizontalGroup(
             jptransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jptransaksiLayout.setVerticalGroup(
             jptransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -433,7 +449,7 @@ public class Dashboard extends javax.swing.JFrame {
         jplaporan.setLayout(jplaporanLayout);
         jplaporanLayout.setHorizontalGroup(
             jplaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jplaporanLayout.setVerticalGroup(
             jplaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -448,7 +464,7 @@ public class Dashboard extends javax.swing.JFrame {
         jppengaturan.setLayout(jppengaturanLayout);
         jppengaturanLayout.setHorizontalGroup(
             jppengaturanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1062, Short.MAX_VALUE)
+            .addGap(0, 1136, Short.MAX_VALUE)
         );
         jppengaturanLayout.setVerticalGroup(
             jppengaturanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -479,14 +495,14 @@ public class Dashboard extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Lcr, javax.swing.GroupLayout.PREFERRED_SIZE, 984, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Lcr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LPrivacypolicy, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LTos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -569,6 +585,7 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel JpManajemenAgunan;
     private javax.swing.JLabel LPrivacypolicy;
     private javax.swing.JLabel LTos;
     private javax.swing.JLabel Lcr;

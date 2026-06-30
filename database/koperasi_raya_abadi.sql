@@ -179,6 +179,24 @@ CREATE TABLE `pinjaman` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `agunan`
+--
+
+CREATE TABLE `agunan` (
+  `id_agunan` int(11) NOT NULL,
+  `id_pinjaman` int(11) NOT NULL,
+  `jenis_agunan` varchar(100) NOT NULL,
+  `nilai_taksir` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `tanggal` date NOT NULL,
+  `status` varchar(30) NOT NULL DEFAULT 'Aktif',
+  `deskripsi` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `simpanan`
 --
 
@@ -225,6 +243,7 @@ CREATE TABLE `users` (
   `id_anggota` int(11) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `jabatan` varchar(100) DEFAULT NULL,
   `password_hash` varchar(255) NOT NULL,
   `status` enum('Aktif','Nonaktif') NOT NULL DEFAULT 'Aktif',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -235,9 +254,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id_user`, `id_group`, `id_anggota`, `nama`, `email`, `password_hash`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, 'admin', 'admin@klp2.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Aktif', '2026-05-23 22:57:00', NULL),
-(2, 2, NULL, 'user', 'user@example.com', '04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb', 'Aktif', '2026-05-24 03:01:32', NULL);
+INSERT INTO `users` (`id_user`, `id_group`, `id_anggota`, `nama`, `email`, `jabatan`, `password_hash`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, 'admin', 'admin@klp2.com', 'Ketua Koperasi', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Aktif', '2026-05-23 22:57:00', NULL),
+(2, 2, NULL, 'user', 'user@example.com', 'Staff', '04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb', 'Aktif', '2026-05-24 03:01:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -362,6 +381,13 @@ ALTER TABLE `pinjaman`
   ADD KEY `fk_pinjaman_anggota` (`id_anggota`);
 
 --
+-- Indexes for table `agunan`
+--
+ALTER TABLE `agunan`
+  ADD PRIMARY KEY (`id_agunan`),
+  ADD KEY `fk_agunan_pinjaman` (`id_pinjaman`);
+
+--
 -- Indexes for table `simpanan`
 --
 ALTER TABLE `simpanan`
@@ -433,6 +459,12 @@ ALTER TABLE `pinjaman`
   MODIFY `id_pinjaman` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `agunan`
+--
+ALTER TABLE `agunan`
+  MODIFY `id_agunan` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `simpanan`
 --
 ALTER TABLE `simpanan`
@@ -471,6 +503,12 @@ ALTER TABLE `angsuran`
 --
 ALTER TABLE `pinjaman`
   ADD CONSTRAINT `fk_pinjaman_anggota` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `agunan`
+--
+ALTER TABLE `agunan`
+  ADD CONSTRAINT `fk_agunan_pinjaman` FOREIGN KEY (`id_pinjaman`) REFERENCES `pinjaman` (`id_pinjaman`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `simpanan`
